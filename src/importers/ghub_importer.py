@@ -8,16 +8,19 @@ from models.macro import Macro
 import sqlite3
 import json
 
-def import_macros(db_path: str):
+def import_macros(db_path: str) -> list[Macro]:
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
-    cur.execute("SELECT file FROM data LIMIT 1")
-    blob = cur.fetchone()[0]
+    blob = cur.execute(
+        "SELECT file FROM data LIMIT 1"
+        ).fetchone()[0]
 
     conn.close()
+    
+    data = json.loads(blob.decode("utf-8"))
+    
+    macros = []
 
-    text = blob.decode("utf-8")
-    data = json.loads(text)
 
     return data
