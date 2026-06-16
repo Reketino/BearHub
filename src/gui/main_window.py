@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
             return
        
         macros = import_macros(file_path)
-        
         print("We found your {len(macros)} macros\n")
+        
         
        
