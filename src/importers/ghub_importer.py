@@ -17,8 +17,8 @@ def import_macros(db_path: str) -> list[Macro]:
         ).fetchone()[0]
 
     conn.close()
+    
+    data = json.loads(blob.decode("utf-8"))
 
-    text = blob.decode("utf-8")
-    data = json.loads(text)
 
     return data
