@@ -29,6 +29,12 @@ def import_macros(db_path: str) -> list[Macro]:
         macro = card.get("macro", {})
         sequence = macro.get("sequence", {})
         simple = sequence.get("simpleSequence", {})
+        
+        text = ""
+        
+        for component in simple.get("components", {}):
+            if "textBlock" in component:
+                text += component["textBlock"].get("text", "")
 
 
     return data
