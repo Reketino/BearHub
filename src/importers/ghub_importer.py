@@ -19,6 +19,8 @@ def import_macros(db_path: str) -> list[Macro]:
     conn.close()
     
     data = json.loads(blob.decode("utf-8"))
+    
+    macros = []
 
 
     return data
