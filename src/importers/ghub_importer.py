@@ -21,6 +21,10 @@ def import_macros(db_path: str) -> list[Macro]:
     data = json.loads(blob.decode("utf-8"))
     
     macros = []
+    
+    for card in data.get("cards", {}).get("cards", []):
+        if card.get("attribute") != "MACRO_PLAYBACK":
+            continue
 
 
     return data
