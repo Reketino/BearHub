@@ -27,6 +27,7 @@ def import_macros(db_path: str) -> list[Macro]:
             continue
         
         macro = card.get("macro", {})
+        sequence = macro.get("sequence", {})
 
 
     return data
