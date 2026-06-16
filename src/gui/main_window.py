@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QListWidget,
+    QFileDialog,
 )
 
 from importers.ghub_importer import import_macros
@@ -44,43 +45,35 @@ class MainWindow(QMainWindow):
 
         self.import_button = QPushButton("Import from H hub")
         layout.addWidget(self.import_button)
-
+        
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
-
-        db_path = "/home/bear/Nedlastinger/settings.db"
-        data = import_macros(db_path)
-
-        profiles = data["profiles"]["profiles"]
-        my_profile = next(
-            (
-                p
-                for p in profiles
-                if p.get("name") in ("Ny profil", "New Profile")
-            ),
-            None,
+        
+        self.import_button.clicked.connect(self.import_ghub)
+    
+    def import_ghub(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Choose settings.db",
+            "",
+            "Database (*.db)"
         )
-
-        if my_profile is None:
-            self.macro_list.addItem("Fant ingen brukerprofil.")
+        
+        if not file_path:
             return
-
+       
+        macros = import_macros(file_path)
+        
+        self.macro_list.clear()
         self.macro_list.addItem(
-            f"Profil: {my_profile.get('name')}"
+            f"Found {len(macros)} macros"
         )
-
-        print(f"\nFant profil: {my_profile.get('name')}\n")
-
-        print("=== Slot IDs ===")
-        for assignment in my_profile.get("assignments", []):
-            slot = assignment.get("slotId", "")
-            print(slot)
-            self.macro_list.addItem(slot)
-
-        print("\n=== Søker etter tekstmakroer ===")
-
-        search_for_text(data, "{}")
-        search_for_text(data, "()")
-        search_for_text(data, "[]")
-        search_for_text(data, "=>")
-  
+        
+        for macro in macros:
+            self.macro_list.addItem(
+                f"{macro.name} -> {macro.text}"
+            )
+        
+        
+        
+       
