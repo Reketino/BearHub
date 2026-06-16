@@ -25,6 +25,8 @@ def import_macros(db_path: str) -> list[Macro]:
     for card in data.get("cards", {}).get("cards", []):
         if card.get("attribute") != "MACRO_PLAYBACK":
             continue
+        
+        macro = card.get("macro", {})
 
 
     return data
