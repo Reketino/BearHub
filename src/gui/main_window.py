@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
             self,
             "Choose settings.db",
             "",
-            "Database(*.db)"
+            "Database (*.db)"
         )
         
         if not file_path:
