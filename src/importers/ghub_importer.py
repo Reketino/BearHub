@@ -25,6 +25,25 @@ def import_macros(db_path: str) -> list[Macro]:
     for card in data.get("cards", {}).get("cards", []):
         if card.get("attribute") != "MACRO_PLAYBACK":
             continue
+        
+        macro = card.get("macro", {})
+        sequence = macro.get("sequence", {})
+        simple = sequence.get("simpleSequence", {})
+        
+        text = ""
+        
+        for component in simple.get("components", {}):
+            if "textBlock" in component:
+                text += component["textBlock"].get("text", "")
+                
+        macros.append(
+            Macro(
+                id=card.get("id", ""),
+                name=card.get("name", "Unamed"),
+                text=text,
+                macro_type=macro.get("type", "UNKNOWN"),
+            )
+        )
 
 
-    return data
+    return macros
