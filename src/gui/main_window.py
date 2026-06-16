@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QListWidget,
+    QFileDialog,
 )
 
 from importers.ghub_importer import import_macros
