@@ -35,6 +35,15 @@ def import_macros(db_path: str) -> list[Macro]:
         for component in simple.get("components", {}):
             if "textBlock" in component:
                 text += component["textBlock"].get("text", "")
+                
+        macros.append(
+            Macro(
+                id=card.get("id", ""),
+                name=card.get("name", "Unamed"),
+                text=text,
+                macro_type=macro.get("type", "UNKNOWN"),
+            )
+        )
 
 
     return data
