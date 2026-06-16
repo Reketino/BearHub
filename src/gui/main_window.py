@@ -56,14 +56,8 @@ class MainWindow(QMainWindow):
         
         if not file_path:
             return
-        
-
-        self.macro_list = QListWidget()
-        layout.addWidget(self.macro_list)
-
-        db_path = "/home/bear/Nedlastinger/settings.db"
        
-        macros = import_macros(db_path)
+        macros = import_macros(file_path)
         
         print("We found your {len(macros)} macros\n")
         
