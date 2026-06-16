@@ -63,9 +63,12 @@ class MainWindow(QMainWindow):
             return
        
         macros = import_macros(file_path)
-        print("We found your {len(macros)} macros\n")
         
-        self.macros_list.clear()
+        self.macro_list.clear()
+        self.macro_list.addItem(
+            f"Found {len(macros)} macros"
+        )
+        
         
         
        
