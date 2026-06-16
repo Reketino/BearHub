@@ -46,6 +46,13 @@ class MainWindow(QMainWindow):
         self.import_button = QPushButton("Import from H hub")
         layout.addWidget(self.import_button)
         self.import_button.clicked.connect(self.import_ghub)
+    def import_ghub(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Choose settings.db",
+            "",
+            "Database(*.db)"
+        )
 
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
@@ -55,4 +62,5 @@ class MainWindow(QMainWindow):
         macros = import_macros(db_path)
         
         print("We found your {len(macros)} macros\n")
+        
        
