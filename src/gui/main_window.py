@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
 
         self.import_button = QPushButton("Import from H hub")
         layout.addWidget(self.import_button)
+        self.import_button.clicked.connect(self.import_ghub)
 
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
