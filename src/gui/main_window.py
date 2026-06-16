@@ -53,6 +53,10 @@ class MainWindow(QMainWindow):
             "",
             "Database(*.db)"
         )
+        
+        if not file_path:
+            return
+        
 
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
