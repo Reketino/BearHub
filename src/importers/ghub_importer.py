@@ -46,4 +46,4 @@ def import_macros(db_path: str) -> list[Macro]:
         )
 
 
-    return data
+    return macros
