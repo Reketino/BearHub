@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.import_button = QPushButton("Import from H hub")
         layout.addWidget(self.import_button)
         
-        self.macro_list = QListWidget
+        self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
         
         self.import_button.clicked.connect(self.import_ghub)
@@ -68,6 +68,11 @@ class MainWindow(QMainWindow):
         self.macro_list.addItem(
             f"Found {len(macros)} macros"
         )
+        
+        for macro in macros:
+            self.macro_list.addItem(
+                f"{macro.name} -> {macro.text}"
+            )
         
         
         
