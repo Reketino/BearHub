@@ -26,6 +26,8 @@ def import_macros(db_path: str) -> list[Macro]:
         if card.get("attribute") != "MACRO_PLAYBACK":
             continue
         
+        print("\n" + "=" * 60)
+        
         macro = card.get("macro", {})
         sequence = macro.get("sequence", {})
         simple = sequence.get("simpleSequence", {})
