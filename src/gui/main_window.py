@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         title = QLabel("BearHub")
         layout.addWidget(title)
 
-        self.import_button = QPushButton("Import from H hub")
+        self.import_button = QPushButton("Import from Ghub")
         layout.addWidget(self.import_button)
         
         self.macro_list = QListWidget()
