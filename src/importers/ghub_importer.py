@@ -27,6 +27,7 @@ def import_macros(db_path: str) -> list[Macro]:
             continue
         
         print("\n" + "=" * 60)
+        print ("NAME:", card.get("name"))
         
         macro = card.get("macro", {})
         sequence = macro.get("sequence", {})
