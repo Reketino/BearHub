@@ -1,0 +1,103 @@
+{
+    "profiles": [
+        {
+            "id": "ghub-import",
+            "name": "Imported from G hub",
+            "imported_at": "2026-06-23T15:36:05.579207",
+            "macro_count": 13,
+            "macros": [
+                {
+                    "name": "{}",
+                    "text": "{}",
+                    "input_id": "399",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "[]",
+                    "text": "[]",
+                    "input_id": "400",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "()",
+                    "text": "()",
+                    "input_id": "401",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "_",
+                    "text": "_",
+                    "input_id": "402",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "<>",
+                    "text": "<>",
+                    "input_id": "402",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "=>",
+                    "text": "=>",
+                    "input_id": "403",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "/>",
+                    "text": "/>",
+                    "input_id": "404",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": ":",
+                    "text": ":",
+                    "input_id": "405",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "`",
+                    "text": "`",
+                    "input_id": "406",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": ";",
+                    "text": ";",
+                    "input_id": "407",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "{",
+                    "text": "{",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                },
+                {
+                    "name": "}",
+                    "text": "}",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                },
+                {
+                    "name": "ctrl + c",
+                    "text": "ctrl + c",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                }
+            ]
+        }
+    ]
+}

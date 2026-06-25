@@ -10,8 +10,16 @@ venv/
 
 # OS
 .DS_Store
+Thumbs.db
 
-# Logitech / lokale filer
+# Logitech / local files
 settings.db
 *.db
 *.sqlite
+
+# BearHub user data
+src/storage/profiles.json
+
+# Environment files
+.env
+.env.local
