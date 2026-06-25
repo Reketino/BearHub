@@ -1,0 +1,26 @@
+{
+  "profiles": [
+    {
+      "id": "ghub-import",
+      "name": "Example Profile",
+      "imported_at": "2026-01-01T00:00:00",
+      "macro_count": 2,
+      "macros": [
+        {
+          "name": "Hello World",
+          "text": "Hello World",
+          "input_id": "399",
+          "preset": "Example Preset",
+          "device": "KEYBOARD.g915_x_ls"
+        },
+        {
+          "name": "Email",
+          "text": "example@example.com",
+          "input_id": "400",
+          "preset": "Example Preset",
+          "device": "KEYBOARD.g915_x_ls"
+        }
+      ]
+    }
+  ]
+}

@@ -9,24 +9,12 @@ from PySide6.QtWidgets import (
 )
 
 from importers.ghub_importer import import_macros
-import pprint
-
-def search_for_text(obj, needle, path="root"):
-    if isinstance(obj, dict):
-        for key, value in obj.items():
-            search_for_text(value, needle, f"{path}/{key}")
-
-    elif isinstance(obj, list):
-        for index, item in enumerate(obj):
-            search_for_text(item, needle, f"{path}[{index}]")
-
-    elif isinstance(obj, str):
-        if needle in obj:
-            print(f"\nFUNNET '{needle}'")
-            print(path)
-            print(obj)
-
-
+from storage.profile_storage import ( 
+    save_profile,
+    load_profiles,
+    )
+from constants.g_keys import G_KEY_MAP
+from models.macro import Macro
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -49,7 +37,17 @@ class MainWindow(QMainWindow):
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
         
+        self.details = QLabel("Select a macro")
+        layout.addWidget(self.details)
+        
+        self.macros = []
+        
+        self.macro_list.currentRowChanged.connect(
+            self.show_macro
+        )
+        
         self.import_button.clicked.connect(self.import_ghub)
+        self.load_saved_profiles()
     
     def import_ghub(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -64,16 +62,78 @@ class MainWindow(QMainWindow):
        
         macros = import_macros(file_path)
         
-        self.macro_list.clear()
-        self.macro_list.addItem(
-            f"Found {len(macros)} macros"
+        save_profile(
+            macros,
+            "src/storage/profile.json"
         )
         
+        self.setWindowTitle(
+            f"Bearhub - {len(macros)} macros imported"
+        )
+        self.display_macros(macros)
+  
+    def display_macros(self, macros):
+        self.macros = macros
+        self.macro_list.clear()
+        
         for macro in macros:
-            self.macro_list.addItem(
-                f"{macro.name} -> {macro.text}"
+            key_name = G_KEY_MAP.get(
+                macro.input_id,
+                "Unbound"
             )
+            
+            self.macro_list.addItem(
+                f"{macro.name} [{key_name}]"
+            )
+            
+    def show_macro(self, row):
+        if row < 0:
+            return
         
+        macro = self.macros[row]
         
+        key_name = G_KEY_MAP.get(
+            macro.input_id,
+            "Unbound"
+        )
+        
+        self.details.setText(
+            f"Name: {macro.name}\n\n"
+            f"Text:\n{macro.text}\n\n"
+            f"Key: {key_name}\n"
+            f"Preset: {macro.profile_name}\n"
+            f"Device: {macro.device_signature}"
+        )
+        
+    def load_profile(self, profile):
+        self.setWindowTitle(
+            f"{profile['name']} - {profile['macro_count']} macros"
+        )
+        macros = []
+        
+        for macro_data in profile["macros"]:
+            macros.append(
+                Macro(
+                    id="",
+                    name=macro_data["name"],
+                    text=macro_data["text"],
+                    macro_type="TEXT",
+                    profile_name=macro_data["preset"],
+                    device_signature=macro_data["device"],
+                    input_id=macro_data["input_id"],
+                )
+            )
+            
+        self.display_macros(macros)
+        
+    def load_saved_profiles(self):
+        profiles = load_profiles(
+            "src/storage/profile.json"
+        )
+        
+        if not profiles:
+            return
+        
+        self.load_profile(profiles[0])
         
        
