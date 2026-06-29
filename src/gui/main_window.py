@@ -15,6 +15,7 @@ from storage.profile_storage import (
     )
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
+from runtime.macro_engine import MacroEngine
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -40,13 +41,23 @@ class MainWindow(QMainWindow):
         self.details = QLabel("Select a macro")
         layout.addWidget(self.details)
         
+        self.execute_button = QPushButton("Execute")
+        layout.addWidget(self.execute_button)
+        
         self.macros = []
+        
+        self.engine = MacroEngine()
         
         self.macro_list.currentRowChanged.connect(
             self.show_macro
         )
+        self.import_button.clicked.connect(
+            self.import_ghub
+        )
+        self.execute_button.clicked.connect(
+            self.execute_selected_macro
+        )
         
-        self.import_button.clicked.connect(self.import_ghub)
         self.load_saved_profiles()
     
     def import_ghub(self):
@@ -67,13 +78,11 @@ class MainWindow(QMainWindow):
             "src/storage/profile.json"
         )
         
-        self.setWindowTitle(
-            f"Bearhub - {len(macros)} macros imported"
-        )
-        self.display_macros(macros)
+        self.load_saved_profiles()
   
     def display_macros(self, macros):
         self.macros = macros
+        self.engine.load_profile(macros)
         self.macro_list.clear()
         
         for macro in macros:
@@ -135,5 +144,15 @@ class MainWindow(QMainWindow):
             return
         
         self.load_profile(profiles[0])
+        
+    def execute_selected_macro(self):
+        row = self.macro_list.currentRow()
+        
+        if row < 0:
+            return
+        
+        macro = self.macros[row]
+        
+        self.engine.execute_macro(macro)
         
        
