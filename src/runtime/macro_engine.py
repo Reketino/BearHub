@@ -11,7 +11,7 @@ class MacroEngine:
         self.profile = macros
         
         print(
-            f"Loaded{len(macros)} macros."
+            f"Loaded {len(macros)} macros."
         )
         
     def execute_macro(self, macro):
