@@ -1,3 +1,5 @@
+from PySide6.QtCore import QTimer
+
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -153,6 +155,14 @@ class MainWindow(QMainWindow):
         
         macro = self.macros[row]
         
-        self.engine.execute_macro(macro)
+        self.details.setText(
+            f"Executing `{macro.name}` in 2 seconds...\n"
+            "Switch to your editor."
+        )
+        
+        QTimer.singleShot(
+            2000,
+            lambda: self.engine.execute_macro(macro)
+        )
         
        
