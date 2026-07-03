@@ -46,6 +46,9 @@ class MainWindow(QMainWindow):
         self.execute_button = QPushButton("Execute")
         layout.addWidget(self.execute_button)
         
+        self.status = QLabel("Ready")
+        layout.addWidget(self.status)
+        
         self.macros = []
         
         self.engine = MacroEngine()
@@ -81,6 +84,9 @@ class MainWindow(QMainWindow):
         )
         
         self.load_saved_profiles()
+        self.status.setText(
+            f"Imported {len(macros)} macros."
+        )
   
     def display_macros(self, macros):
         self.macros = macros
@@ -114,6 +120,10 @@ class MainWindow(QMainWindow):
             f"Key: {key_name}\n"
             f"Preset: {macro.profile_name}\n"
             f"Device: {macro.device_signature}"
+        )
+        
+        self.status.setText(
+            f"Selected {macro.name}"
         )
         
     def load_profile(self, profile):
@@ -157,12 +167,17 @@ class MainWindow(QMainWindow):
         
         self.details.setText(
             f"Executing `{macro.name}` in 2 seconds...\n"
-            "Switch to your editor."
         )
         
         QTimer.singleShot(
             2000,
-            lambda: self.engine.execute_macro(macro)
+            lambda: self.execute_macro(macro)
+        )
+    
+    def execute_macro(self, macro):
+        self.engine.execute_macro(macro)
+        self.status.setText(
+            f"Executed{macro.name}"
         )
         
        
