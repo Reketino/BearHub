@@ -37,6 +37,12 @@ class MainWindow(QMainWindow):
         self.import_button = QPushButton("Import from Ghub")
         layout.addWidget(self.import_button)
         
+        self.start_button = QPushButton("Start Runtime")
+        layout.addWidget(self.start_button)
+        
+        self.stop_button = QPushButton("Stop Runtime")
+        layout.addWidget(self.stop_button)
+        
         self.macro_list = QListWidget()
         layout.addWidget(self.macro_list)
         
@@ -58,6 +64,12 @@ class MainWindow(QMainWindow):
         )
         self.import_button.clicked.connect(
             self.import_ghub
+        )
+        self.start_button.clicked.connect(
+            self.start_runtime
+        )
+        self.stop_button.clicked.connect(
+            self.stop_runtime
         )
         self.execute_button.clicked.connect(
             self.execute_selected_macro
@@ -166,7 +178,7 @@ class MainWindow(QMainWindow):
         macro = self.macros[row]
         
         self.details.setText(
-            f"Executing `{macro.name}` in 2 seconds...\n"
+            f"Executing {macro.name} in 2 seconds..."
         )
         
         QTimer.singleShot(
@@ -177,7 +189,20 @@ class MainWindow(QMainWindow):
     def execute_macro(self, macro):
         self.engine.execute_macro(macro)
         self.status.setText(
-            f"Executed{macro.name}"
+            f"Executed {macro.name}"
+        )
+        
+    def start_runtime(self):
+        self.engine.start()
+        
+        self.status.setText(
+            "Runtime started."
+        )
+        
+    def stop_runtime(self):
+        self.engine.stop()
+        self.status.setText(
+            "Runtime stopped."
         )
         
        
