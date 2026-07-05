@@ -177,7 +177,7 @@ class MainWindow(QMainWindow):
         
         macro = self.macros[row]
         
-        self.details.setText(
+        self.status.setText(
             f"Executing {macro.name} in 2 seconds..."
         )
         
