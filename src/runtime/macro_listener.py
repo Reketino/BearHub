@@ -23,8 +23,10 @@ class MacroListener:
         print("Stopped listening😶‍🌫️")
         
     def on_press(self, event):
-        if not self.running:
-            return
+        print(
+            f"name={event.name}"
+            f"scan_code{event.scan_code}"
+        )
         print(event.name)
         if self.callback:
-            self.callback(event.name)
+            self.callback(event.scan_code)
