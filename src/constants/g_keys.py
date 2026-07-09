@@ -9,3 +9,8 @@ G_KEY_MAP = {
     "406": "G8",
     "407": "G9",
 }
+
+G_KEY_TO_INPUT_ID = {
+    value: key
+    for key, value in G_KEY_MAP.items()
+}
