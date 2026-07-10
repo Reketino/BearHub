@@ -1,6 +1,7 @@
 from models.macro import Macro
 from runtime.macro_executor import MacroExecutor
 from runtime.macro_listener import MacroListener
+from constants.g_keys import G_KEY_TO_INPUT_ID
 
 class MacroEngine:
     def __init__(self):
@@ -25,7 +26,16 @@ class MacroEngine:
         
     def on_key_pressed(self,key):
         print(f"Pressed {key}")
-    
+        
+        input_id = G_KEY_TO_INPUT_ID.get(key)
+        if not input_id:
+            return
+        for macro in self.profile:
+            if macro.input_id == input_id:
+                print(f"Executing {macro.name}")
+                self.execute_macro(macro)
+                return
+        
     def start(self):
         if self.running:
             return
