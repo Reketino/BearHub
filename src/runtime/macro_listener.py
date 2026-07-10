@@ -2,19 +2,15 @@ import hid
 from threading import Thread
 
 from runtime.hid_parser import parse_report
+from runtime.hid_device import find_device
 
-
-PATH = (
-    b"\\\\?\\HID#VID_046D&PID_C547&MI_02&Col02"
-    b"#8&324fa3f5&0&0001"
-    b"#{4d1e55b2-f16f-11cf-88cb-001111000030}"
-)
 
 class MacroListener:
     def __init__(self):
         self.running = False
         self.callback = None
         self.thread = None
+        self.last_key = None
         self.device = hid.device()
         
     def set_callback(self, callback):
@@ -34,18 +30,27 @@ class MacroListener:
         print("Listening for ya keys👂🏻")
         
     def listen(self):
+        print("Listener thread started")
         try:
-            self.device.open_path(PATH)
+            path = find_device()
+            self.device.open_path(path)
+            print("HID device opened")
         
             while self.running:
                 report = self.device.read(64)
                 
                 if not report:
                     continue
+                print(f"Report: {report}")
+                
                 key = parse_report(report)
             
                 if not key:
+                    self.last_key = None
                     continue
+                if key == self.last_key:
+                    continue
+                self.last_key = key
                 print (key)
             
                 if self.callback:
@@ -55,6 +60,7 @@ class MacroListener:
         
         finally:
             self.device.close()
+            print("HID device closed")
         
     def stop(self):
         if not self.running:

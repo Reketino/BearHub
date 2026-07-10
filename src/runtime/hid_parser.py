@@ -1,4 +1,4 @@
-from src.constants.hid_keys import HID_G_KEY_MAP
+from constants.hid_keys import HID_G_KEY_MAP
 
 def parse_report(report):
     if len(report) < 5:

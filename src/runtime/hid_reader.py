@@ -1,6 +1,6 @@
 import hid
 
-from src.runtime.hid_parser import parse_report
+from runtime.hid_parser import parse_report
 
 PATH = (
     b"\\\\?\\HID#VID_046D&PID_C547&MI_02&Col02"
