@@ -3,9 +3,10 @@ from pathlib import Path
 
 import hid
 
+from runtime.hid_device import find_device
+
 class HIDCalibrator:
-    def __init__(self, device_path: bytes):
-        self.device_path = device_path
+    def __init__(self):
         self.device = hid.device()
         
         self.keys = [
@@ -23,7 +24,11 @@ class HIDCalibrator:
         self.mapping = {}
         
     def calibrate(self):
-        self.device.open_path(self.device_path)
+        path = find_device()
+        
+        if path is None:
+            raise RuntimeError("No compatible Logitech HID device found.")
+        self.device.open_path(path)
         
         try:
             for key_name in self.keys:

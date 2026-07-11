@@ -1,8 +1,24 @@
-PATH = (
-    b"\\\\?\\HID#VID_046D&PID_C547&MI_02&Col02"
-    b"#8&324fa3f5&0&0001"
-    b"#{4d1e55b2-f16f-11cf-88cb-001111000030}"
-)
+import hid
+
+LOGITECH_VENDOR_ID = 0x046D
+LIGHTSPEED_RECEIVER_PID = 0xC547
+G_KEY_USAGE_PAGE = 65280
+G_KEY_USAGE = 2
 
 def find_device():
-    return PATH
+    
+    for device in hid.enumerate():
+        if ( 
+            device["vendor_id"] == LOGITECH_VENDOR_ID
+            and device["product_id"] == LIGHTSPEED_RECEIVER_PID
+            and device["usage_page"] == G_KEY_USAGE_PAGE
+            and device["usage"] == G_KEY_USAGE
+        ):
+                print(
+                    f"Found Logitech receiver"
+                    f"(interface {device['interface_number']})"
+                )
+                
+                return device["path"]
+            
+    return None
