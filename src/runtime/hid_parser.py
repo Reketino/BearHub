@@ -2,14 +2,21 @@ import json
 
 HID_G_KEY_MAP = {}
 
-try:
-    with open(
-        "src/storage/hid_mapping.json",
-        encoding="utf-8",
-    ) as f:
-        HID_G_KEY_MAP = json.load(f)
-except FileNotFoundError:
-    print("No HID mapping found.")
+def load_mapping():
+    global HID_G_KEY_MAP
+    try:
+        with open(
+            "src/storage/hid_mapping.json",
+            encoding="utf-8",
+        ) as f:
+            HID_G_KEY_MAP = json.load(f)
+        print("HID mapping loaded.")
+        
+    except FileNotFoundError:
+        HID_G_KEY_MAP = {}
+        print("No HID mapping found.")
+        
+load_mapping()
     
 def parse_report(report):
     if len(report) < 5:
