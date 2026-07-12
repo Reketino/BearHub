@@ -18,6 +18,8 @@ from storage.profile_storage import (
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
+from runtime.hid_calibration import HIDCalibrator
+from runtime.hid_parser import load_mapping
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -36,6 +38,9 @@ class MainWindow(QMainWindow):
 
         self.import_button = QPushButton("Import from Ghub")
         layout.addWidget(self.import_button)
+        
+        self.calibrate_button = QPushButton("Calibrate G-keys")
+        layout.addWidget(self.calibrate_button)
         
         self.start_button = QPushButton("Start Runtime")
         layout.addWidget(self.start_button)
@@ -64,6 +69,9 @@ class MainWindow(QMainWindow):
         )
         self.import_button.clicked.connect(
             self.import_ghub
+        )
+        self.calibrate_button.clicked.connect(
+            self.calibrate_g_keys
         )
         self.start_button.clicked.connect(
             self.start_runtime
@@ -203,6 +211,20 @@ class MainWindow(QMainWindow):
         self.engine.stop()
         self.status.setText(
             "Runtime stopped."
+        )
+    def calibrate_g_keys(self):
+        self.status.setText(
+            "Starting calibration..."
+        )
+        calibrator = HIDCalibrator()
+        calibrator.calibrate()
+        calibrator.save(
+            "src/storage/hid_mapping.json"
+        )
+        load_mapping()
+        
+        self.status.setText(
+            "Calibration completed."
         )
         
        
