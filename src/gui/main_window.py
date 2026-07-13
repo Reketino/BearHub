@@ -216,15 +216,26 @@ class MainWindow(QMainWindow):
         self.status.setText(
             "Starting calibration..."
         )
-        calibrator = HIDCalibrator()
-        calibrator.calibrate()
-        calibrator.save(
-            "src/storage/hid_mapping.json"
-        )
-        load_mapping()
         
-        self.status.setText(
-            "Calibration completed."
-        )
+        try:
+            calibrator = HIDCalibrator()
+            calibrator.calibrate()
+            calibrator.save(
+                "src/storage/hid_mapping.json"
+            )
+            load_mapping()
+        
+            self.status.setText(
+                "Calibration completed."
+            )
+            
+        except Exception as e:
+            self.status.setText(
+                "calibration failed."
+            )
+            
+            print(e)
+        
+    
         
        
