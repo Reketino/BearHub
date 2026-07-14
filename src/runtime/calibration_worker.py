@@ -6,3 +6,5 @@ from runtime.hid_parser import load_mapping
 class CalibrationWorker(QObject):
     finished = Signal()
     error = Signal(str)
+    
+    def run(self):
