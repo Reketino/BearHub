@@ -9,10 +9,16 @@ class CalibrationWorker(QObject):
     
     def run(self):
         try:
-            calibrator = HIDCalibrator
+            calibrator = HIDCalibrator()
             
             calibrator.calibrate()
             
             calibrator.save(
-                "src/storage/hid_maaping.json"
+                "src/storage/hid_maping.json"
             )
+            
+            load_mapping()
+            self.finished.emit()
+            
+        except Exception as e:
+            self.error.emit(str(e))
