@@ -4,3 +4,5 @@ from runtime.hid_calibration import HIDCalibrator
 from runtime.hid_parser import load_mapping
 
 class CalibrationWorker(QObject):
+    finished = Signal()
+    error = Signal(str)
