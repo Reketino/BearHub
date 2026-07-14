@@ -8,3 +8,7 @@ class CalibrationWorker(QObject):
     error = Signal(str)
     
     def run(self):
+        try:
+            calibrator = HIDCalibrator
+            
+            calibrator.calibrate()
