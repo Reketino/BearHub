@@ -12,3 +12,7 @@ class CalibrationWorker(QObject):
             calibrator = HIDCalibrator
             
             calibrator.calibrate()
+            
+            calibrator.save(
+                "src/storage/hid_maaping.json"
+            )
