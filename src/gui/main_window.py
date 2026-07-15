@@ -1,4 +1,4 @@
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QThread, QTimer
 
 from PySide6.QtWidgets import (
     QMainWindow,
@@ -20,6 +20,7 @@ from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.hid_calibration import HIDCalibrator
 from runtime.hid_parser import load_mapping
+from runtime.calibration_worker import CalibrationWorker
 
 class MainWindow(QMainWindow):
     def __init__(self):
