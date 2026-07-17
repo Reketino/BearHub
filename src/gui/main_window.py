@@ -220,6 +220,8 @@ class MainWindow(QMainWindow):
             "Starting calibration..."
         )
         
+        self.calibration_thread = QThread()
+        
         try:
             calibrator = HIDCalibrator()
             calibrator.calibrate()
