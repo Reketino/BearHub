@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         self.engine = MacroEngine()
         
         self.calibration_thread = None
+        self.calibration_worker = None
         
         self.macro_list.currentRowChanged.connect(
             self.show_macro
