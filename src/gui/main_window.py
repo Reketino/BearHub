@@ -222,6 +222,7 @@ class MainWindow(QMainWindow):
         )
         
         self.calibration_thread = QThread()
+        self.calibration_worker = CalibrationWorker()
         
         try:
             calibrator = HIDCalibrator()
