@@ -224,6 +224,24 @@ class MainWindow(QMainWindow):
         self.calibration_thread = QThread()
         self.calibration_worker = CalibrationWorker()
         
+        self.calibration_worker.moveToThread(
+            self.calibration_thread
+        )
+        
+        self.calibration_thread.started.connect(
+            self.calibration_worker.run
+        )
+        
+        self.calibration_worker.finished.connect(
+            self.calibration_finished
+        )
+        
+        self.calibration_worker.error.connect(
+            self.calibration_failed
+        )
+        
+        self.calibration_thread.start()
+        
         try:
             calibrator = HIDCalibrator()
             calibrator.calibrate()
@@ -242,7 +260,22 @@ class MainWindow(QMainWindow):
             )
             
             print(e)
+            
+    def calibration_finished(self):
+        self.status.setText(
+            "Calibration completed."
+        )
+        if self.calibration_thread:
+            self.calibration_thread.quit()
         
-    
+    def calibration_failed(self, messsage):
+        self.status.setText(
+            "Calibration failed."
+        )
+        print(
+            f"Calibration error: {messsage}"
+        )
+        if self.calibration_thread:
+            self.calibration_thread.quit()
         
        
