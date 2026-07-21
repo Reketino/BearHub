@@ -23,7 +23,7 @@ class HIDCalibrator:
         
         self.mapping = {}
         
-    def calibrate(self):
+    def calibrate(self, progress_callback=None):
         path = find_device()
         
         if path is None:
@@ -32,7 +32,11 @@ class HIDCalibrator:
         
         try:
             for key_name in self.keys:
+                if progress_callback:
+                    progress_callback(key_name)
+                    
                 print(f"\nPress {key_name}...")
+                
                 while True:
                     report = self.device.read(64)
                     if not report:
@@ -52,7 +56,11 @@ class HIDCalibrator:
             parents=True,
             exist_ok=True,
         )
-        with open(output_file, "w", encoding="utf-8") as f:
+        with open(
+            output_file, 
+            "w", 
+            encoding="utf-8",
+            ) as f:
             json.dump(
                 self.mapping,
                 f,

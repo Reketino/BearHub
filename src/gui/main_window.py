@@ -18,8 +18,6 @@ from storage.profile_storage import (
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
-from runtime.hid_calibration import HIDCalibrator
-from runtime.hid_parser import load_mapping
 from runtime.calibration_worker import CalibrationWorker
 
 class MainWindow(QMainWindow):
@@ -47,6 +45,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.start_button)
         
         self.stop_button = QPushButton("Stop Runtime")
+        self.stop_button.setEnabled(False)
         layout.addWidget(self.stop_button)
         
         self.macro_list = QListWidget()
@@ -207,12 +206,19 @@ class MainWindow(QMainWindow):
     def start_runtime(self):
         self.engine.start()
         
+        self.start_button.setEnabled(False)
+        self.calibrate_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        
         self.status.setText(
             "Runtime started."
         )
         
     def stop_runtime(self):
         self.engine.stop()
+        self.start_button.setEnabled(True)
+        self.calibrate_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
         self.status.setText(
             "Runtime stopped."
         )
@@ -220,6 +226,10 @@ class MainWindow(QMainWindow):
         self.status.setText(
             "Starting calibration..."
         )
+        
+        self.calibrate_button.setEnabled(False)
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(False)
         
         self.calibration_thread = QThread()
         self.calibration_worker = CalibrationWorker()
@@ -236,46 +246,67 @@ class MainWindow(QMainWindow):
             self.calibration_finished
         )
         
+        self.calibration_worker.progress.connect(
+            self.calibration_progress
+        )
+        
         self.calibration_worker.error.connect(
             self.calibration_failed
         )
         
+        self.calibration_worker.finished.connect(
+            self.calibration_thread.quit
+        )
+        self.calibration_worker.error.connect(
+            self.calibration_thread.quit
+        )
+        self.calibration_worker.finished.connect(
+            self.calibration_worker.deleteLater
+        )
+        self.calibration_worker.error.connect(
+            self.calibration_worker.deleteLater
+        )
+        self.calibration_thread.finished.connect(
+            self.calibration_thread.deleteLater
+        )
+        self.calibration_thread.finished.connect(
+            self.calibration_cleanup
+        )
+        
         self.calibration_thread.start()
         
-        try:
-            calibrator = HIDCalibrator()
-            calibrator.calibrate()
-            calibrator.save(
-                "src/storage/hid_mapping.json"
-            )
-            load_mapping()
-        
-            self.status.setText(
-                "Calibration completed."
-            )
-            
-        except Exception as e:
-            self.status.setText(
-                "calibration failed."
-            )
-            
-            print(e)
+    
+    def calibration_progress(self, key_name):
+        self.status.setText(
+            f"Press {key_name}..."
+        )
             
     def calibration_finished(self):
         self.status.setText(
             "Calibration completed."
         )
-        if self.calibration_thread:
-            self.calibration_thread.quit()
         
-    def calibration_failed(self, messsage):
+        self.calibrate_button.setEnabled(True)
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        
+    def calibration_failed(self, message):
         self.status.setText(
             "Calibration failed."
         )
+        
+        self.calibrate_button.setEnabled(True)
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+                
         print(
-            f"Calibration error: {messsage}"
+            f"Calibration error: {message}"
         )
-        if self.calibration_thread:
-            self.calibration_thread.quit()
+            
+    def calibration_cleanup(self):
+        self.calibration_worker = None
+        self.calibration_thread = None
+            
+
         
        

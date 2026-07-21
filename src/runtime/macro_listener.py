@@ -11,7 +11,7 @@ class MacroListener:
         self.callback = None
         self.thread = None
         self.last_key = None
-        self.device = hid.device()
+        self.device = None
         
     def set_callback(self, callback):
         self.callback = callback
@@ -19,7 +19,9 @@ class MacroListener:
     def start(self):
         if self.running:
             return
+        
         self.running = True
+        self.last_key = None
         
         self.thread = Thread(
             target=self.listen,
@@ -33,11 +35,22 @@ class MacroListener:
         print("Listener thread started")
         try:
             path = find_device()
+            
+            if path is None:
+                raise RuntimeError(
+                    "No compatible Logitech HID device found"
+                )
+                
+            self.device = hid.device()
             self.device.open_path(path)
+            
             print("HID device opened")
         
             while self.running:
                 report = self.device.read(64)
+                
+                if not self.running:
+                    break
                 
                 if not report:
                     continue
@@ -48,22 +61,44 @@ class MacroListener:
                 if not key:
                     self.last_key = None
                     continue
+                
                 if key == self.last_key:
                     continue
+                
                 self.last_key = key
+                
                 print (key)
             
                 if self.callback:
                     self.callback(key)
+                    
         except Exception as e:
-            print(f"HID Error: {e}")
+            if self.running:
+                print(f"HID Error: {e}")
         
-        finally:
-            self.device.close()
+        finally: 
+            if self.device is not None:
+                try:
+                    self.device.close()
+                except Exception:
+                    pass
+                
+                self.device = None
+            self.running = False
+            
             print("HID device closed")
         
     def stop(self):
         if not self.running:
             return
+        
         self.running = False
+        
+        if (
+            self.thread is not None
+            and self.thread.is_alive()
+        ):
+            self.thread.join(timeout=1)
+            
+        self.thread = None
         print("Stopped listening😶‍🌫️")

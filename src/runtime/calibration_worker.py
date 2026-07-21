@@ -6,15 +6,18 @@ from runtime.hid_parser import load_mapping
 class CalibrationWorker(QObject):
     finished = Signal()
     error = Signal(str)
+    progress = Signal(str)
     
     def run(self):
         try:
             calibrator = HIDCalibrator()
             
-            calibrator.calibrate()
+            calibrator.calibrate(
+                self.progress.emit
+            )
             
             calibrator.save(
-                "src/storage/hid_maping.json"
+                "src/storage/hid_mapping.json"
             )
             
             load_mapping()
