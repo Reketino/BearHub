@@ -66,3 +66,55 @@ def load_profiles(output_file):
     
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)["profiles"]
+    
+def add_macro(macro, output_file):
+    path = Path(output_file)
+    
+    if path.exists():
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
+    else:
+        data = {"profiles": []}
+        
+    profile = next(
+        (
+            profile 
+            for profile in data["profiles"]
+            if profile.get("id") == "bearhub"
+        ),
+        None,   
+    )
+    
+    if profile is None:
+        profile = {
+            "id": "bearhub",
+            "name": "BearHub",
+            "created_at": datetime.now().isoformat(),
+            "macro_count": 0,
+            "macros": [],
+        }
+        
+        data["profiles"].append(profile)
+        
+    profile["macros"].append(
+        {
+            "name": macro.name,
+            "text": macro.text,
+            "input_id": macro.input_id,
+            "preset": macro.profile_name,
+            "device": macro.device_signature
+        }
+    )
+    
+    profile["macro_count"] = len(
+        profile["macros"]
+    )
+    
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(
+            data,
+            f,
+            indent=4,
+            ensure_ascii=False,
+        )

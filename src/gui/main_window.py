@@ -8,10 +8,12 @@ from PySide6.QtWidgets import (
     QPushButton,
     QListWidget,
     QFileDialog,
+    QDialog,
 )
 
 from importers.ghub_importer import import_macros
 from storage.profile_storage import ( 
+    add_macro,
     save_profile,
     load_profiles,
     )
@@ -19,6 +21,7 @@ from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.calibration_worker import CalibrationWorker
+from gui.macro_dialog import MacroDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -37,6 +40,9 @@ class MainWindow(QMainWindow):
 
         self.import_button = QPushButton("Import from Ghub")
         layout.addWidget(self.import_button)
+        
+        self.new_macro_button = QPushButton("New Macro")
+        layout.addWidget(self.new_macro_button)
         
         self.calibrate_button = QPushButton("Calibrate G-keys")
         layout.addWidget(self.calibrate_button)
@@ -72,6 +78,9 @@ class MainWindow(QMainWindow):
         )
         self.import_button.clicked.connect(
             self.import_ghub
+        )
+        self.new_macro_button.clicked.connect(
+            self.open_macro_dialog
         )
         self.calibrate_button.clicked.connect(
             self.calibrate_g_keys
@@ -149,6 +158,50 @@ class MainWindow(QMainWindow):
             f"Selected {macro.name}"
         )
         
+    def open_macro_dialog(self):
+        dialog = MacroDialog(self)
+        
+        result = dialog.exec()
+        
+        if result != QDialog.DialogCode.Accepted:
+            return
+        
+        data = dialog.get_data()
+        
+        input_id = next(
+            (
+                input_id
+                for input_id, key_name in G_KEY_MAP.items()
+                if key_name == data["key"]
+            ),
+            None,
+        )
+        
+        if input_id is None:
+            self.status.setText(
+                f"Could not find input ID for {data['key']}."
+            )
+            return
+        
+        macro = Macro(
+            id="",
+            name=data["name"],
+            text=data["text"],
+            macro_type="TEXT",
+            profile_name="BearHub",
+            device_signature="",
+            input_id=input_id,
+        )
+        
+        add_macro(
+            macro,
+            "src/storage/profile.json",
+        )
+        
+        self.status.setText(
+            f"Saved {macro.name}."
+        )
+        
     def load_profile(self, profile):
         self.setWindowTitle(
             f"{profile['name']} - {profile['macro_count']} macros"
@@ -216,12 +269,15 @@ class MainWindow(QMainWindow):
         
     def stop_runtime(self):
         self.engine.stop()
+        
         self.start_button.setEnabled(True)
         self.calibrate_button.setEnabled(True)
         self.stop_button.setEnabled(False)
+        
         self.status.setText(
             "Runtime stopped."
         )
+        
     def calibrate_g_keys(self):
         self.status.setText(
             "Starting calibration..."
