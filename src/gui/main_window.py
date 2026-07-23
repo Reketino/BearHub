@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QFileDialog,
     QDialog,
+    QComboBox,
 )
 
 from importers.ghub_importer import import_macros
@@ -37,6 +38,9 @@ class MainWindow(QMainWindow):
 
         title = QLabel("BearHub")
         layout.addWidget(title)
+        
+        self.profile_selector = QComboBox()
+        layout.addWidget(self.profile_selector)
 
         self.import_button = QPushButton("Import from Ghub")
         layout.addWidget(self.import_button)
@@ -67,11 +71,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.status)
         
         self.macros = []
+        self.profiles = []
         
         self.engine = MacroEngine()
         
         self.calibration_thread = None
         self.calibration_worker = None
+        
+        self.profile_selector.currentIndexChanged.connect(
+            self.change_profile
+        )
         
         self.macro_list.currentRowChanged.connect(
             self.show_macro
@@ -119,6 +128,8 @@ class MainWindow(QMainWindow):
         self.status.setText(
             f"Imported {len(macros)} macros."
         )
+ 
+    #-------- DISPLAY MACROS --------#
   
     def display_macros(self, macros):
         self.macros = macros
@@ -134,9 +145,14 @@ class MainWindow(QMainWindow):
             self.macro_list.addItem(
                 f"{macro.name} [{key_name}]"
             )
+    
+    #-------- SHOW MACRO --------#
             
     def show_macro(self, row):
-        if row < 0:
+        if row < 0 or row >= len(self.macros):
+            self.details.setText(
+                "Select a macro"
+            )
             return
         
         macro = self.macros[row]
@@ -157,6 +173,8 @@ class MainWindow(QMainWindow):
         self.status.setText(
             f"Selected {macro.name}"
         )
+        
+    #-------- OPEN MACRO DIALOG --------#
         
     def open_macro_dialog(self):
         dialog = MacroDialog(self)
@@ -198,9 +216,30 @@ class MainWindow(QMainWindow):
             "src/storage/profile.json",
         )
         
+        self.load_saved_profiles()
+        
+        bearhub_index = next(
+            (
+                index
+                for index, profile in enumerate(self.profiles)
+                if profile.get("id") == "bearhub"
+            ),
+            -1
+        )
+        
+        if bearhub_index >= 0:
+            self.profile_selector.setCurrentIndex(
+                bearhub_index
+            )
+            self.change_profile(
+                bearhub_index
+            )
+        
         self.status.setText(
             f"Saved {macro.name}."
         )
+        
+    #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):
         self.setWindowTitle(
@@ -222,16 +261,38 @@ class MainWindow(QMainWindow):
             )
             
         self.display_macros(macros)
-        
+    
+    #-------- LOAD SAVED PROFILES --------#
+     
     def load_saved_profiles(self):
-        profiles = load_profiles(
+        self.profiles = load_profiles(
             "src/storage/profile.json"
         )
         
-        if not profiles:
+        self.profile_selector.clear()
+        
+        if not self.profiles:
             return
         
-        self.load_profile(profiles[0])
+        for profile in self.profiles:
+            self.profile_selector.addItem(
+                profile["name"]
+            )
+        
+        self.profile_selector.setCurrentIndex(0)
+        
+        
+    def change_profile(self, index):
+        if index < 0:
+            return
+        
+        if index >= len(self.profiles):
+            return
+        
+        profile = self.profiles[index]
+        
+        self.load_profile(profile)
+        
         
     def execute_selected_macro(self):
         row = self.macro_list.currentRow()
