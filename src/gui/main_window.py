@@ -48,6 +48,10 @@ class MainWindow(QMainWindow):
         self.new_macro_button = QPushButton("New Macro")
         layout.addWidget(self.new_macro_button)
         
+        self.edit_macro_button = QPushButton("Edit Macro")
+        self.edit_macro_button.setEnabled(False)
+        layout.addWidget(self.edit_macro_button)
+        
         self.calibrate_button = QPushButton("Calibrate G-keys")
         layout.addWidget(self.calibrate_button)
         
@@ -91,6 +95,9 @@ class MainWindow(QMainWindow):
         self.new_macro_button.clicked.connect(
             self.open_macro_dialog
         )
+        self.edit_macro_button.clicked.connect(
+            self.edit_selected_macro
+        )
         self.calibrate_button.clicked.connect(
             self.calibrate_g_keys
         )
@@ -105,6 +112,8 @@ class MainWindow(QMainWindow):
         )
         
         self.load_saved_profiles()
+        
+    #-------- IMPORT GHUB --------#
     
     def import_ghub(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -153,7 +162,10 @@ class MainWindow(QMainWindow):
             self.details.setText(
                 "Select a macro"
             )
+            self.edit_macro_button.setEnabled(False)
             return
+        
+        self.edit_macro_button.setEnabled(True)
         
         macro = self.macros[row]
         
@@ -231,14 +243,38 @@ class MainWindow(QMainWindow):
             self.profile_selector.setCurrentIndex(
                 bearhub_index
             )
-            self.change_profile(
-                bearhub_index
-            )
         
         self.status.setText(
             f"Saved {macro.name}."
         )
         
+    #-------- EDIT SELECTED MACRO --------#
+        
+    def edit_selected_macro(self):
+        row = self.macro_list.currentRow()
+        
+        if row < 0 or row >= len(self.macros):
+            self.status.setText(
+                "Select a macro to edit."
+            )
+            return
+        
+        macro = self.macros[row]
+        
+        dialog = MacroDialog(
+            self,
+            macro=macro,
+        )
+        
+        result = dialog.exec()
+        
+        if result != QDialog.DialogCode.Accepted:
+            return
+        
+        data = dialog.get_data()
+        
+        print(data)
+                
     #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):
@@ -280,7 +316,8 @@ class MainWindow(QMainWindow):
             )
         
         self.profile_selector.setCurrentIndex(0)
-        
+    
+    #-------- CHANGE PROFILE --------#    
         
     def change_profile(self, index):
         if index < 0:
@@ -293,6 +330,7 @@ class MainWindow(QMainWindow):
         
         self.load_profile(profile)
         
+    #-------- EXECUTE SELECTED MACROS --------#
         
     def execute_selected_macro(self):
         row = self.macro_list.currentRow()
@@ -311,11 +349,15 @@ class MainWindow(QMainWindow):
             lambda: self.execute_macro(macro)
         )
     
+    #-------- EXECUTE MACRO --------#
+    
     def execute_macro(self, macro):
         self.engine.execute_macro(macro)
         self.status.setText(
             f"Executed {macro.name}"
         )
+    
+    #-------- START RUNTIME --------#
         
     def start_runtime(self):
         self.engine.start()
@@ -327,6 +369,8 @@ class MainWindow(QMainWindow):
         self.status.setText(
             "Runtime started."
         )
+    
+    #-------- STOP RUNTIME --------#
         
     def stop_runtime(self):
         self.engine.stop()
@@ -338,6 +382,8 @@ class MainWindow(QMainWindow):
         self.status.setText(
             "Runtime stopped."
         )
+    
+    #-------- CALIBRATE G KEYS --------#
         
     def calibrate_g_keys(self):
         self.status.setText(
@@ -392,11 +438,14 @@ class MainWindow(QMainWindow):
         
         self.calibration_thread.start()
         
+    #-------- CALIBRATION PROGRESS --------#
     
     def calibration_progress(self, key_name):
         self.status.setText(
             f"Press {key_name}..."
         )
+        
+    #-------- CALIBRATION FINISHED --------#
             
     def calibration_finished(self):
         self.status.setText(
@@ -406,6 +455,8 @@ class MainWindow(QMainWindow):
         self.calibrate_button.setEnabled(True)
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
+        
+    #-------- CALIBRATION FAILED--------#
         
     def calibration_failed(self, message):
         self.status.setText(
