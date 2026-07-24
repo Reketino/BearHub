@@ -118,3 +118,56 @@ def add_macro(macro, output_file):
             indent=4,
             ensure_ascii=False,
         )
+def update_macro(
+    profile_id,
+    macro_index,
+    macro,
+    output_file,
+):
+    path = Path(output_file)
+    
+    if not path.exists():
+        return False
+    
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        
+    profile = next(
+        (
+            profile
+            for profile in data["profiles"]
+            if profile.get("id") == profile_id
+        ),
+        None,
+    )
+    
+    if profile is None:
+        return False
+    
+    if (
+        macro_index < 0
+        or macro_index >= len(profile["macros"])
+    ):
+        return False
+    
+    profile["macros"][macro_index] = {
+        "name": macro.name,
+        "text": macro.text,
+        "input_id": macro.input_id,
+        "preset": macro.profile_name,
+        "device": macro.device_signature,
+    }
+    
+    profile["macro_count"] = len(
+        profile["macros"]
+    )
+    
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(
+            data,
+            f,
+            indent=4,
+            ensure_ascii=False,
+        )
+        
+    return True

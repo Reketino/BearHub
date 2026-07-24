@@ -6,11 +6,13 @@ from PySide6.QtWidgets import (
     QPushButton,
     QVBoxLayout,
 )
+from constants.g_keys import G_KEY_MAP
 
 class MacroDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, macro=None):
         super().__init__(parent)
         
+        self.macro = macro
         self.setWindowTitle("New Macro")
         self.resize(400, 250)
         
@@ -61,9 +63,30 @@ class MacroDialog(QDialog):
             self.accept
         )
         
+        if self.macro is not None:
+            self.setWindowTitle("Edit Macro")
+            
+            self.name_input.setText(
+                self.macro.name
+            )
+            
+            self.text_input.setText(
+                self.macro.text
+            )
+            
+            key_name = G_KEY_MAP.get(
+                self.macro.input_id,
+                "G1"
+            )
+            
+            self.key_input.setCurrentText(
+                key_name
+            )
+        
     def get_data(self):
         return {
             "name": self.name_input.text().strip(),
             "key": self.key_input.currentText(),
             "text": self.text_input.text(),
         }
+        
