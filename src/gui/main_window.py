@@ -17,6 +17,7 @@ from storage.profile_storage import (
     add_macro,
     save_profile,
     load_profiles,
+    update_macro,
     )
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
@@ -76,6 +77,7 @@ class MainWindow(QMainWindow):
         
         self.macros = []
         self.profiles = []
+        self.current_profile_id = None
         
         self.engine = MacroEngine()
         
@@ -259,6 +261,12 @@ class MainWindow(QMainWindow):
             )
             return
         
+        if self.current_profile_id is None:
+            self.status.setText(
+                "No profile selected."
+            )
+            return
+        
         macro = self.macros[row]
         
         dialog = MacroDialog(
@@ -273,11 +281,49 @@ class MainWindow(QMainWindow):
         
         data = dialog.get_data()
         
-        print(data)
+        input_id = next(
+            (
+                input_id
+                for input_id, key_name in G_KEY_MAP.items()
+                if key_name == data["key"]
+            ),
+            "",
+        )
+        
+        updated_macro = Macro(
+            id=macro.id,
+            name=data["name"],
+            text=data["text"],
+            macro_type=macro.macro_type,
+            profile_name=macro.profile_name,
+            device_signature=macro.device_signature,
+            input_id=input_id,
+        )
+        
+        success = update_macro(
+            self.current_profile_id,
+            row,
+            updated_macro,
+            "src/storage/profile.json"
+        )
+        
+        if not success:
+            self.status.setText(
+                "Could not update the macro"
+            )
+            return
+        
+        self.reload_current_profile()
+        
+        self.status.setText(
+            f"Updated {updated_macro.name}"
+        )
                 
     #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):
+        self.current_profile_id = profile["id"]
+        
         self.setWindowTitle(
             f"{profile['name']} - {profile['macro_count']} macros"
         )
@@ -297,6 +343,30 @@ class MainWindow(QMainWindow):
             )
             
         self.display_macros(macros)
+        
+    #-------- RELOAD CURRENT PROFILE --------#
+        
+    def reload_current_profile(self):
+        profiles = load_profiles(
+            "src/storage/profile.json"
+        )
+        
+        profile = next(
+            (
+                profile
+                for profile in profiles
+                if profile.get("id")
+                == self.current_profile_id
+            ),
+            None,
+        )
+        
+        if profile is None:
+            return
+        
+        self.load_profile(profile)
+    
+        
     
     #-------- LOAD SAVED PROFILES --------#
      

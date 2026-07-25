@@ -107,8 +107,8 @@
             "macros": [
                 {
                     "name": "Bear Test",
-                    "text": "Hello from Bearhub",
-                    "input_id": "404",
+                    "text": "Bear Test Edited",
+                    "input_id": "402",
                     "preset": "BearHub",
                     "device": ""
                 },
