@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QDialog,
     QComboBox,
+    QMessageBox,
 )
 
 from importers.ghub_importer import import_macros
@@ -18,6 +19,7 @@ from storage.profile_storage import (
     save_profile,
     load_profiles,
     update_macro,
+    delete_macro,
     )
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
@@ -52,6 +54,10 @@ class MainWindow(QMainWindow):
         self.edit_macro_button = QPushButton("Edit Macro")
         self.edit_macro_button.setEnabled(False)
         layout.addWidget(self.edit_macro_button)
+        
+        self.delete_macro_button = QPushButton("Delete Macro")
+        self.delete_macro_button.setEnabled(False)
+        layout.addWidget(self.delete_macro_button)
         
         self.calibrate_button = QPushButton("Calibrate G-keys")
         layout.addWidget(self.calibrate_button)
@@ -100,6 +106,7 @@ class MainWindow(QMainWindow):
         self.edit_macro_button.clicked.connect(
             self.edit_selected_macro
         )
+        self.delete_macro_button.clicked.connect(self.delete_selected_macro)
         self.calibrate_button.clicked.connect(
             self.calibrate_g_keys
         )
@@ -161,13 +168,12 @@ class MainWindow(QMainWindow):
             
     def show_macro(self, row):
         if row < 0 or row >= len(self.macros):
-            self.details.setText(
-                "Select a macro"
-            )
             self.edit_macro_button.setEnabled(False)
+            self.delete_macro_button.setEnabled(False)
             return
         
         self.edit_macro_button.setEnabled(True)
+        self.delete_macro_button.setEnabled(True)
         
         macro = self.macros[row]
         
@@ -317,6 +323,52 @@ class MainWindow(QMainWindow):
         
         self.status.setText(
             f"Updated {updated_macro.name}"
+        )
+        
+    #-------- DELETE SELECTED MACRO --------#
+    
+    def delete_selected_macro(self):
+        row = self.macro_list.currentRow()
+        
+        if row < 0 or row >= len(self.macros):
+            return
+        
+        if self.current_profile_id is None:
+            self.status.setText(
+                "No profile selected."
+            )
+            return
+        
+        macro = self.macros[row]
+        
+        answer = QMessageBox.question(
+            self,
+            "Delete Macro",
+            f"Delete '{macro.name}'?",
+            QMessageBox.StandardButton.Yes
+            | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        
+        success = delete_macro(
+            self.current_profile_id,
+            row,
+            "src/storage/profile.json"
+        )
+        
+        if not success:
+            self.status.setText(
+                "Could not delete macro."
+            )
+            return
+        
+        self.reload_current_profile()
+        
+        self.status.setText(
+            f"Deleted {macro.name}."
         )
                 
     #-------- LOAD PROFILE --------#
