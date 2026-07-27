@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+
 def save_profile(macros, output_file):
     profile = {
         "id": "ghub-import",
@@ -57,6 +58,7 @@ def save_profile(macros, output_file):
             indent=4,
             ensure_ascii=False
         )
+ 
         
 def load_profiles(output_file):
     path = Path(output_file)
@@ -66,6 +68,7 @@ def load_profiles(output_file):
     
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)["profiles"]
+
     
 def add_macro(macro, output_file):
     path = Path(output_file)
@@ -118,6 +121,8 @@ def add_macro(macro, output_file):
             indent=4,
             ensure_ascii=False,
         )
+        
+        
 def update_macro(
     profile_id,
     macro_index,
