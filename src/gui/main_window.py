@@ -320,6 +320,8 @@ class MainWindow(QMainWindow):
             return
         
         self.reload_current_profile()
+        if row < self.macro_list.count():
+            self.macro_list.setCurrentRow(row)
         
         self.status.setText(
             f"Updated {updated_macro.name}"
@@ -366,6 +368,16 @@ class MainWindow(QMainWindow):
             return
         
         self.reload_current_profile()
+        
+        if self.macro_list.count() > 0:
+            new_row = min(
+                row,
+                self.macro_list.count() - 1,
+            )
+            
+            self.macro_list.setCurrentRow(
+                new_row
+            )
         
         self.status.setText(
             f"Deleted {macro.name}."

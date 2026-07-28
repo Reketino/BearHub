@@ -222,3 +222,40 @@ def delete_macro(
             ensure_ascii=False,
         )
     return True
+
+def is_key_avaliable(
+    profile_id,
+    input_id,
+    output_file,
+    ignore_index=None,
+):
+    path = Path(output_file)
+    
+    if not path.exists():
+        return True
+    
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        
+    profile = next (
+        (
+            profile
+            for profile in data["profiles"]
+            if profile.get("id") == profile_id
+        ),
+        None,
+    )
+    
+    if profile is None:
+        return True
+    
+    for index, macro in enumerate(
+        profile["macros"]
+    ):
+        if index == ignore_index:
+            continue
+        
+        if macro.get("input_id") == input_id:
+            return False
+        
+    return True
