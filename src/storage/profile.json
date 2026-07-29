@@ -107,7 +107,7 @@
             "macros": [
                 {
                     "name": "Bear Test",
-                    "text": "Bear Test Edited",
+                    "text": "Bear Test not edited",
                     "input_id": "402",
                     "preset": "BearHub",
                     "device": ""

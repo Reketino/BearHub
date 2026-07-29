@@ -24,6 +24,7 @@ class HIDCalibrator:
         self.mapping = {}
         
     def calibrate(self, progress_callback=None):
+        self.mapping = {}
         path = find_device()
         
         if path is None:
@@ -37,16 +38,26 @@ class HIDCalibrator:
                     
                 print(f"\nPress {key_name}...")
                 
-                while True:
+                code = None
+                
+                while code is None:
                     report = self.device.read(64)
                     if not report:
                         continue
-                    code = report[4]
-                    if code == 0:
+                    current_code = report[4]
+                    if current_code == 0:
                         continue
-                    print(f"{key_name} -> {code}")
-                    self.mapping[str(code)] = key_name
-                    break
+                    code = current_code
+                print(f"{key_name} -> {code}")
+                self.mapping[str(code)] = key_name
+                
+                while True:
+                    report = self.device.read(64)
+                    
+                    if not report:
+                        continue
+                    if report[4] == 0: 
+                        break
         
         finally:
             self.device.close()
