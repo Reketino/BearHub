@@ -223,7 +223,7 @@ def delete_macro(
         )
     return True
 
-def is_key_avaliable(
+def is_key_available(
     profile_id,
     input_id,
     output_file,

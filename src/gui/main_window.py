@@ -20,6 +20,7 @@ from storage.profile_storage import (
     load_profiles,
     update_macro,
     delete_macro,
+    is_key_available,
     )
 from constants.g_keys import G_KEY_MAP
 from models.macro import Macro
@@ -221,6 +222,19 @@ class MainWindow(QMainWindow):
             )
             return
         
+        if not is_key_available(
+            "bearhub",
+            input_id,
+            "src/storage/profile.json",
+        ):
+            QMessageBox.warning(
+                self,
+                "G-key already in use",
+                f"{data['key']} is already assigned. "
+                "to another macro in BearHub.",
+            )
+            return
+        
         macro = Macro(
             id="",
             name=data["name"],
@@ -295,6 +309,20 @@ class MainWindow(QMainWindow):
             ),
             "",
         )
+        
+        if not is_key_available(
+            self.current_profile_id,
+            input_id,
+            "src/storage/profile.json",
+            ignore_index=row
+        ):
+            QMessageBox.warning(
+                self,
+                "G-key already in use",
+                f"{data['key']} is already assigned "
+                "to another macro in this profile."
+            )
+            return
         
         updated_macro = Macro(
             id=macro.id,
