@@ -49,7 +49,7 @@ class MacroDialog(QDialog):
         
         self.text_input = QLineEdit()
         form_layout.addRow(
-            "Text:",
+            "Value:",
             self.text_input,
         )
         
@@ -72,7 +72,7 @@ class MacroDialog(QDialog):
             )
             
             self.text_input.setText(
-                self.macro.text
+                self.macro.value
             )
             
             key_name = G_KEY_MAP.get(
@@ -86,7 +86,7 @@ class MacroDialog(QDialog):
             
     def validate_and_accept(self):
         name = self.name_input.text().strip()
-        text = self.text_input.text().strip()
+        value = self.text_input.text().strip()
         
         if not name:
             QMessageBox.warning(
@@ -97,11 +97,11 @@ class MacroDialog(QDialog):
             self.name_input.setFocus()
             return
         
-        if not text:
+        if not value:
             QMessageBox.warning(
                 self,
-                "Missing text",
-                "Macro text cannot be empty.",
+                "Missing value",
+                "Macro value cannot be empty.",
             )
             self.text_input.setFocus()
             return
@@ -112,6 +112,6 @@ class MacroDialog(QDialog):
         return {
             "name": self.name_input.text().strip(),
             "key": self.key_input.currentText(),
-            "text": self.text_input.text().strip(),
+            "value": self.text_input.text().strip(),
         }
         

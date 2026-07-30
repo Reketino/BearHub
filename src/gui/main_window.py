@@ -23,10 +23,12 @@ from storage.profile_storage import (
     is_key_available,
     )
 from constants.g_keys import G_KEY_MAP
+from constants.macro_types import TEXT
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.calibration_worker import CalibrationWorker
 from gui.macro_dialog import MacroDialog
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -239,7 +241,7 @@ class MainWindow(QMainWindow):
             id="",
             name=data["name"],
             value=data["value"],
-            macro_type="TEXT",
+            macro_type=TEXT,
             profile_name="BearHub",
             device_signature="",
             input_id=input_id,
@@ -432,7 +434,7 @@ class MainWindow(QMainWindow):
                     ),
                     macro_type=macro_data.get(
                         "macro_type",
-                        "TEXT",
+                        TEXT,
                         ),
                     profile_name=macro_data["preset"],
                     device_signature=macro_data["device"],
