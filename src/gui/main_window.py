@@ -185,7 +185,7 @@ class MainWindow(QMainWindow):
         
         self.details.setText(
             f"Name: {macro.name}\n\n"
-            f"Text:\n{macro.text}\n\n"
+            f"Value:\n{macro.value}\n\n"
             f"Key: {key_name}\n"
             f"Preset: {macro.profile_name}\n"
             f"Device: {macro.device_signature}"
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow):
         macro = Macro(
             id="",
             name=data["name"],
-            text=data["text"],
+            value=data["value"],
             macro_type="TEXT",
             profile_name="BearHub",
             device_signature="",
@@ -327,7 +327,7 @@ class MainWindow(QMainWindow):
         updated_macro = Macro(
             id=macro.id,
             name=data["name"],
-            text=data["text"],
+            value=data["value"],
             macro_type=macro.macro_type,
             profile_name=macro.profile_name,
             device_signature=macro.device_signature,
@@ -426,8 +426,14 @@ class MainWindow(QMainWindow):
                 Macro(
                     id="",
                     name=macro_data["name"],
-                    text=macro_data["text"],
-                    macro_type="TEXT",
+                    value=macro_data.get(
+                        "value",
+                        macro_data.get("text", "")
+                    ),
+                    macro_type=macro_data.get(
+                        "macro_type",
+                        "TEXT",
+                        ),
                     profile_name=macro_data["preset"],
                     device_signature=macro_data["device"],
                     input_id=macro_data["input_id"],
