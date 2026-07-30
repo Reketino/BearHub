@@ -4,7 +4,6 @@ from dataclasses import dataclass
 class Macro:
     id:str
     name:str
-    text:str
     value: str
     macro_type: str
      

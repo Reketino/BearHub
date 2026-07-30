@@ -239,7 +239,6 @@ class MainWindow(QMainWindow):
             id="",
             name=data["name"],
             value=data["value"],
-            text=data["text"],
             macro_type="TEXT",
             profile_name="BearHub",
             device_signature="",
@@ -328,7 +327,7 @@ class MainWindow(QMainWindow):
         updated_macro = Macro(
             id=macro.id,
             name=data["name"],
-            text=data["text"],
+            value=data["value"],
             macro_type=macro.macro_type,
             profile_name=macro.profile_name,
             device_signature=macro.device_signature,
