@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QFormLayout,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QVBoxLayout,
 )
@@ -60,7 +61,7 @@ class MacroDialog(QDialog):
         layout.addWidget(self.save_button)
         
         self.save_button.clicked.connect(
-            self.accept
+            self.validate_and_accept
         )
         
         if self.macro is not None:
@@ -82,6 +83,8 @@ class MacroDialog(QDialog):
             self.key_input.setCurrentText(
                 key_name
             )
+            
+    
         
     def get_data(self):
         return {
