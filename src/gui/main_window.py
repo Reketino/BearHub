@@ -426,8 +426,14 @@ class MainWindow(QMainWindow):
                 Macro(
                     id="",
                     name=macro_data["name"],
-                    text=macro_data["text"],
-                    macro_type="TEXT",
+                    value=macro_data.get(
+                        "value",
+                        macro_data.get("text", "")
+                    ),
+                    macro_type=macro_data.get(
+                        "macro_type",
+                        "TEXT",
+                        ),
                     profile_name=macro_data["preset"],
                     device_signature=macro_data["device"],
                     input_id=macro_data["input_id"],
