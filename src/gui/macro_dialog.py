@@ -85,7 +85,7 @@ class MacroDialog(QDialog):
             )
     def validate_and_accept(self):
         name = self.name_input.text().strip()
-        text = self.text_input.text()
+        text = self.text_input.text().strip()
         
         if not name:
             QMessageBox.warning(
