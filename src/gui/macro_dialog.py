@@ -110,6 +110,6 @@ class MacroDialog(QDialog):
         return {
             "name": self.name_input.text().strip(),
             "key": self.key_input.currentText(),
-            "text": self.text_input.text(),
+            "text": self.text_input.text().strip(),
         }
         
