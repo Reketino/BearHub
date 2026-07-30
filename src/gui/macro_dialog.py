@@ -83,6 +83,7 @@ class MacroDialog(QDialog):
             self.key_input.setCurrentText(
                 key_name
             )
+            
     def validate_and_accept(self):
         name = self.name_input.text().strip()
         text = self.text_input.text().strip()
