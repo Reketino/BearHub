@@ -15,7 +15,8 @@ def save_profile(macros, output_file):
     for macro in macros:
         profile["macros"].append({
             "name": macro.name,
-            "text": macro.text,
+            "value": macro.value,
+            "macro_type": macro.macro_type,
             "input_id": macro.input_id,
             "preset": macro.profile_name,
             "device": macro.device_signature,
@@ -103,7 +104,8 @@ def add_macro(macro, output_file):
     profile["macros"].append(
         {
             "name": macro.name,
-            "text": macro.text,
+            "value": macro.value,
+            "macro_type": macro.macro_type,
             "input_id": macro.input_id,
             "preset": macro.profile_name,
             "device": macro.device_signature
@@ -157,7 +159,8 @@ def update_macro(
     
     profile["macros"][macro_index] = {
         "name": macro.name,
-        "text": macro.text,
+        "value": macro.value,
+        "macro_type": macro.macro_type,
         "input_id": macro.input_id,
         "preset": macro.profile_name,
         "device": macro.device_signature,
