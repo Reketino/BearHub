@@ -238,6 +238,7 @@ class MainWindow(QMainWindow):
         macro = Macro(
             id="",
             name=data["name"],
+            value=data["value"],
             text=data["text"],
             macro_type="TEXT",
             profile_name="BearHub",
