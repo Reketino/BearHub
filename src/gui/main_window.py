@@ -185,7 +185,7 @@ class MainWindow(QMainWindow):
         
         self.details.setText(
             f"Name: {macro.name}\n\n"
-            f"Text:\n{macro.text}\n\n"
+            f"Value:\n{macro.value}\n\n"
             f"Key: {key_name}\n"
             f"Preset: {macro.profile_name}\n"
             f"Device: {macro.device_signature}"
