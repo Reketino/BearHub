@@ -83,9 +83,29 @@ class MacroDialog(QDialog):
             self.key_input.setCurrentText(
                 key_name
             )
-            
-    
+    def validate_and_accept(self):
+        name = self.name_input.text().strip()
+        text = self.text_input.text()
         
+        if not name:
+            QMessageBox.warning(
+                self,
+                "Missing name",
+                "Macro name cannot be empty.",
+            )
+            self.name_input.setFocus()
+            return
+        
+        if not text:
+            QMessageBox.warning(
+                self,
+                "Missing text",
+                "Macro text cannot be empty.",
+            )
+            self.text_input.setFocus()
+            return
+        self.accept()
+
     def get_data(self):
         return {
             "name": self.name_input.text().strip(),
