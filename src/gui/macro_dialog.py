@@ -105,6 +105,7 @@ class MacroDialog(QDialog):
             )
             self.text_input.setFocus()
             return
+        
         self.accept()
 
     def get_data(self):
