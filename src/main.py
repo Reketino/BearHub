@@ -13,6 +13,8 @@ def get_assets(filename: str) -> Path:
 
 def main():    
     app = QApplication(sys.argv)
+    
+    app.setApplicationName("BearHub")
 
     window = MainWindow()
     window.show()
