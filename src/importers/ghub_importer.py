@@ -1,6 +1,7 @@
 import sqlite3
 import json
-            
+
+from constants.macro_types import TEXT
 from models.macro import Macro
 
 DEBUG = True

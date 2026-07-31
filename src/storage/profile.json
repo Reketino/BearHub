@@ -1,0 +1,20 @@
+{
+    "profiles": [
+        {
+            "id": "bearhub",
+            "name": "BearHub",
+            "created_at": "2026-07-31T09:43:02.880002",
+            "macro_count": 1,
+            "macros": [
+                {
+                    "name": "hotkey",
+                    "value": "{}",
+                    "macro_type": "TEXT",
+                    "input_id": "399",
+                    "preset": "BearHub",
+                    "device": ""
+                }
+            ]
+        }
+    ]
+}
