@@ -126,7 +126,7 @@ def import_macros(db_path: str) -> list[Macro]:
             Macro(
                 id=card.get("id", ""),
                 name=card.get("name", "Unnamed"),
-                text=text,
+                value=text,
                 macro_type=macro.get("type", "UNKNOWN"),
                 
                 profile_name=binding.get(
