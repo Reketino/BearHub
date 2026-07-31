@@ -15,6 +15,7 @@ def main():
     app = QApplication(sys.argv)
     
     app.setApplicationName("BearHub")
+    app.setApplicationDisplayName("Bearhub")
 
     window = MainWindow()
     window.show()
