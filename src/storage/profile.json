@@ -15,6 +15,118 @@
                     "device": ""
                 }
             ]
+        },
+        {
+            "id": "ghub-import",
+            "name": "Imported from G hub",
+            "imported_at": "2026-07-31T10:00:41.547675",
+            "macro_count": 13,
+            "macros": [
+                {
+                    "name": "{}",
+                    "value": "{}",
+                    "macro_type": "TEXT",
+                    "input_id": "399",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "[]",
+                    "value": "[]",
+                    "macro_type": "TEXT",
+                    "input_id": "400",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "()",
+                    "value": "()",
+                    "macro_type": "TEXT",
+                    "input_id": "401",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "_",
+                    "value": "_",
+                    "macro_type": "TEXT",
+                    "input_id": "402",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "<>",
+                    "value": "<>",
+                    "macro_type": "TEXT",
+                    "input_id": "402",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "=>",
+                    "value": "=>",
+                    "macro_type": "TEXT",
+                    "input_id": "403",
+                    "preset": "New Mapping Preset 2",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "/>",
+                    "value": "/>",
+                    "macro_type": "TEXT",
+                    "input_id": "404",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": ":",
+                    "value": ":",
+                    "macro_type": "TEXT",
+                    "input_id": "405",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "`",
+                    "value": "`",
+                    "macro_type": "TEXT",
+                    "input_id": "406",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": ";",
+                    "value": ";",
+                    "macro_type": "TEXT",
+                    "input_id": "407",
+                    "preset": "New Mapping Preset 3",
+                    "device": "KEYBOARD.g915_x_ls"
+                },
+                {
+                    "name": "{",
+                    "value": "{",
+                    "macro_type": "TEXT",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                },
+                {
+                    "name": "}",
+                    "value": "}",
+                    "macro_type": "TEXT",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                },
+                {
+                    "name": "ctrl + c",
+                    "value": "ctrl + c",
+                    "macro_type": "TEXT",
+                    "input_id": "",
+                    "preset": "",
+                    "device": ""
+                }
+            ]
         }
     ]
 }
