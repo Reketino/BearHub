@@ -1,6 +1,7 @@
 import sqlite3
 import json
-            
+
+from constants.macro_types import TEXT
 from models.macro import Macro
 
 DEBUG = True
@@ -125,8 +126,8 @@ def import_macros(db_path: str) -> list[Macro]:
             Macro(
                 id=card.get("id", ""),
                 name=card.get("name", "Unnamed"),
-                text=text,
-                macro_type=macro.get("type", "UNKNOWN"),
+                value=text,
+                macro_type=TEXT,
                 
                 profile_name=binding.get(
                     "preset",
