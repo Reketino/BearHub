@@ -11,9 +11,8 @@ def get_assets(filename: str) -> Path:
     project_root = Path(__file__).resolve().parent.parent
     return project_root / "assets" / filename
 
-app = QApplication([])
+def main():    
+    app = QApplication(sys.argv)
 
-window = MainWindow()
-window.show()
-
-app.exec()
+    window = MainWindow()
+    window.show()
