@@ -111,4 +111,13 @@ QLineEdit {
 QLineEdit:hover {
     border: 1px solid #00b7f0;
 }
+
+QLineEdit:focus {
+    border: 1px solid #00b7f0;
+}
+
+QStatusBar {
+    background-color: #1a1d20;
+    border-top: 1px solid #30353a;
+}
 """
