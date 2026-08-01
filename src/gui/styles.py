@@ -13,4 +13,11 @@ QLabel {
     background-color: transparent;
 }
 
+QComboBox {
+    background-color: #202428;
+    border: 1px solid #343a40;
+    border-radius: 7px;
+    padding: 8px 10px;
+    min-height: 22px;
+}
 """
