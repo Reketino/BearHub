@@ -20,4 +20,22 @@ QComboBox {
     padding: 8px 10px;
     min-height: 22px;
 }
+
+QComboBox:hover {
+    border: 1px solid #00b7f0;
+}
+
+QComboBox:focus {
+    border: 1px solid #00b7f0;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #202428;
+    color: #f2f4f5;
+    border: 1px solid #343a40;
+    selection-background-color: #00aee8;
+    selection-color: #ffffff;
+}
+
+
 """
