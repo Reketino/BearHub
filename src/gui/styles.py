@@ -99,4 +99,16 @@ QListWidget::item:selected {
     color: #ffffff;
     border-left: 3px solid #00b7f0;
 }
+
+QLineEdit {
+    background-color: #202428;
+    border: 1px solid #343a40;
+    border-radius: 7px;
+    padding: 8px 10px;
+    min-height: 22px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #00b7f0;
+}
 """
