@@ -38,7 +38,7 @@ QComboBox QAbstractItemView {
 }
 
 QPushButton {
-    background-color: #24282c;
+    background-color: #2a2f34;
     border: 1px solid #363c42;
     border-radius: 7px;
     padding: 8px 14px;
@@ -122,47 +122,54 @@ QStatusBar {
 }
 
 QMenuBar {
-    
+    background-color: #1a1d20;
 }
 
 QMenuBar::item {
-    
+    padding: 6px 10px;
 }
 
 QMenuBar::item:selected {
-    
+    background-color: #2b3035;
 }
 
-QMenuBar {
-    
+QMenu {
+    background-color: #202428;
+    border: 1px solid #343a40;  
 }
 
-QMenuBar::item {
-    
+QMenu::item {
+    padding: 6px 24px;
 }
 
-QMenuBar::item:selected {
-    
+QMenu::item:selected {
+    background-color: #123b49;
 }
 
 QScrollBar:vertical {
-    
+    background: #1d2023;
+    width: 10px;
+    border: none;
 }
 
 QScrollBar::handle:vertical {
-    
+    background: #40464c;
+    border-radius: 5px;
+    min-height: 20px;
 }
 
 QScrollBar::handle:vertical:hover {
-    
+    background: #00b7f0;
 }
 
 QScrollBar::add-line:vertical,
 QScrollBar::sub-line:vertical {
-    
+    height: 0;
 }
 
 QToolTip {
-    
+    background-color: #202428;
+    color: white;
+    border: 1px solid #00b7f0; 
 }
 """
