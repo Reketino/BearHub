@@ -8,4 +8,9 @@ QWidget {
     font-family: "Segoe UI";
     font-size: 14 px;
 }
+
+QLabel {
+    background-color: transparent;
+}
+
 """
