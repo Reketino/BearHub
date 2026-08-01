@@ -120,4 +120,49 @@ QStatusBar {
     background-color: #1a1d20;
     border-top: 1px solid #30353a;
 }
+
+QMenuBar {
+    
+}
+
+QMenuBar::item {
+    
+}
+
+QMenuBar::item:selected {
+    
+}
+
+QMenuBar {
+    
+}
+
+QMenuBar::item {
+    
+}
+
+QMenuBar::item:selected {
+    
+}
+
+QScrollBar:vertical {
+    
+}
+
+QScrollBar::handle:vertical {
+    
+}
+
+QScrollBar::handle:vertical:hover {
+    
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    
+}
+
+QToolTip {
+    
+}
 """
