@@ -76,5 +76,27 @@ QPushButton#dangerButton:hover {
     color: #ff8080;
 }
 
+QListWidget {
+    background-color: #1d2023;
+    border: 1px solid #30353a;
+    border-radius: 8px;
+    padding: 6px;
+    outline: none;
+}
 
+QListWidget::item {
+    border-radius: 6px;
+    padding: 10px;
+    margin: 2px;
+}
+
+QListWidget::item:hover {
+    background-color: #272c30;
+}
+
+QListWidget::item:selected {
+    background-color: #123b49;
+    color: #ffffff;
+    border-left: 3px solid #00b7f0;
+}
 """
