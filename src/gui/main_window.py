@@ -1,8 +1,11 @@
-from PySide6.QtCore import QThread, QTimer
+from pathlib import Path
 
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QThread, QTimer, Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
+    QHBoxLayout,
     QVBoxLayout,
     QLabel,
     QPushButton,
@@ -41,9 +44,33 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout(central_widget)
+        
+        header_layout = QHBoxLayout()
+        
+        logo = QLabel()
+        pixmap = QPixmap(
+            str(self.get_assets_path("bearhub-logo.png"))
+        )
+        logo.setPixmap(
+            pixmap.scaledToHeight(
+                64,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+        
+        title_layout = QVBoxLayout()
 
         title = QLabel("BearHub")
-        layout.addWidget(title)
+        subtitle = QLabel("Open Source Macro Manager")
+        
+        title_layout.addWidget(title)
+        title_layout.addWidget(subtitle)
+        
+        header_layout.addWidget(logo)
+        header_layout.addLayout(title_layout)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
         
         self.profile_selector = QComboBox()
         layout.addWidget(self.profile_selector)
@@ -124,6 +151,11 @@ class MainWindow(QMainWindow):
         )
         
         self.load_saved_profiles()
+        
+        
+    def get_assets_path(self, filename: str) -> Path:
+        project_root = Path(__file__).resolve().parent.parent.parent
+        return project_root / "assets" / filename
         
     #-------- IMPORT GHUB --------#
     
