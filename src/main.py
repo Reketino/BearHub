@@ -3,14 +3,15 @@ from pathlib import Path
 
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
-from gui.main_window import MainWindow
 
 from gui.main_window import MainWindow
 from gui.styles import BEARHUB_STYLE
 
+
 def get_assets_path(filename: str) -> Path:
     project_root = Path(__file__).resolve().parent.parent
     return project_root / "assets" / filename
+
 
 def main():    
     app = QApplication(sys.argv)
@@ -18,7 +19,7 @@ def main():
     app.setStyleSheet(BEARHUB_STYLE)
     
     app.setApplicationName("BearHub")
-    app.setApplicationDisplayName("Bearhub")
+    app.setApplicationDisplayName("BearHub")
     app.setWindowIcon(
         QIcon(str(get_assets_path("bearhub-icon.png")))
     )
