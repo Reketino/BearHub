@@ -13,6 +13,17 @@ QLabel {
     background-color: transparent;
 }
 
+QLabel#title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #00b7f0;
+}
+
+QLabel#subtitle {
+    font-size: 13px;
+    color: #8e959c;
+}
+
 QComboBox {
     background-color: #202428;
     border: 1px solid #343a40;
