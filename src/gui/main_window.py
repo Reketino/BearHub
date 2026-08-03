@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
         
         header_layout = QHBoxLayout()
+        layout.addSpacing(12)
         
         logo = QLabel()
         pixmap = QPixmap(
@@ -61,7 +62,10 @@ class MainWindow(QMainWindow):
         title_layout = QVBoxLayout()
 
         title = QLabel("BearHub")
+        title.setObjectName("title")
+        
         subtitle = QLabel("Open Source Macro Manager")
+        subtitle.setObjectName("subtitle")
         
         title_layout.addWidget(title)
         title_layout.addWidget(subtitle)
