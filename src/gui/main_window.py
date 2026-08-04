@@ -172,17 +172,77 @@ class MainWindow(QMainWindow):
             
             
     def create_layout(self):
-        layout.addWidget(self.import_button)
-        layout.addWidget(self.new_macro_button)
-        layout.addWidget(self.edit_macro_button)
-        layout.addWidget(self.delete_macro_button)
-        layout.addWidget(self.calibrate_button)
-        layout.addWidget(self.start_button)
-        layout.addWidget(self.stop_button)
-        layout.addWidget(self.macro_list)
-        layout.addWidget(self.details)
-        layout.addWidget(self.execute_button)
-        layout.addWidget(self.status)
+        header_layout = QHBoxLayout()
+
+        logo = QLabel()
+        pixmap = QPixmap(
+            str(self.get_assets_path("bearhub-logo.png"))
+        )
+        logo.setPixmap(
+            pixmap.scaledToHeight(
+                64,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+
+        title_layout = QVBoxLayout()
+
+        title = QLabel("BearHub")
+        title.setObjectName("title")
+
+        subtitle = QLabel("Open Source Macro Manager")
+        subtitle.setObjectName("subtitle")
+
+        title_layout.addWidget(title)
+        title_layout.addWidget(subtitle)
+
+        header_layout.addWidget(logo)
+        header_layout.addLayout(title_layout)
+        header_layout.addStretch()
+
+        self.layout.addLayout(header_layout)
+        self.layout.addSpacing(12)
+
+        content_layout = QHBoxLayout()
+
+        left_layout = QVBoxLayout()
+        right_layout = QVBoxLayout()
+
+        content_layout.addLayout(left_layout, 1)
+        content_layout.addLayout(right_layout, 2)
+
+        self.layout.addLayout(content_layout)
+
+        profile_group = QGroupBox("Profile")
+        actions_group = QGroupBox("Actions")
+        runtime_group = QGroupBox("Runtime")
+
+        left_layout.addWidget(profile_group)
+        left_layout.addWidget(actions_group)
+        left_layout.addWidget(runtime_group)
+        left_layout.addStretch()
+
+        profile_layout = QVBoxLayout(profile_group)
+
+        profile_layout.addWidget(self.profile_selector)
+        profile_layout.addWidget(self.import_button)
+
+        actions_layout = QVBoxLayout(actions_group)
+
+        actions_layout.addWidget(self.new_macro_button)
+        actions_layout.addWidget(self.edit_macro_button)
+        actions_layout.addWidget(self.delete_macro_button)
+        actions_layout.addWidget(self.execute_button)
+
+        runtime_layout = QVBoxLayout(runtime_group)
+
+        runtime_layout.addWidget(self.calibrate_button)
+        runtime_layout.addWidget(self.start_button)
+        runtime_layout.addWidget(self.stop_button)
+
+        right_layout.addWidget(self.macro_list)
+        right_layout.addWidget(self.details)
+        right_layout.addWidget(self.status)
         
     def connect_signals(self):
         self.profile_selector.currentIndexChanged.connect(
