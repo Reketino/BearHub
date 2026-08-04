@@ -54,7 +54,8 @@ class MainWindow(QMainWindow):
         left_layout = QVBoxLayout()
         right_layout = QVBoxLayout()
         
-        
+        content_layout.addLayout(left_layout, 1)
+        content_layout.addLayout(right_layout, 2)
         
         layout.addLayout(content_layout)
         
