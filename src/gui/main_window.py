@@ -173,43 +173,46 @@ class MainWindow(QMainWindow):
             
     def create_widgets(self):
             self.profile_selector = QComboBox()
-            layout.addWidget(self.profile_selector)
+            
 
             self.import_button = QPushButton("Import from Ghub")
-            layout.addWidget(self.import_button)
-        
+           
             self.new_macro_button = QPushButton("New Macro")
-            layout.addWidget(self.new_macro_button)
-        
+            
             self.edit_macro_button = QPushButton("Edit Macro")
             self.edit_macro_button.setEnabled(False)
-            layout.addWidget(self.edit_macro_button)
-        
+            
             self.delete_macro_button = QPushButton("Delete Macro")
             self.delete_macro_button.setEnabled(False)
-            layout.addWidget(self.delete_macro_button)
-        
+            
             self.calibrate_button = QPushButton("Calibrate G-keys")
-            layout.addWidget(self.calibrate_button)
-        
+            
             self.start_button = QPushButton("Start Runtime")
-            layout.addWidget(self.start_button)
             
             self.stop_button = QPushButton("Stop Runtime")
             self.stop_button.setEnabled(False)
-            layout.addWidget(self.stop_button)
-            
+           
             self.macro_list = QListWidget()
-            layout.addWidget(self.macro_list)
-            
+             
             self.details = QLabel("Select a macro")
-            layout.addWidget(self.details)
             
             self.execute_button = QPushButton("Execute")
-            layout.addWidget(self.execute_button)
             
             self.status = QLabel("Ready")
-            layout.addWidget(self.status)
+            
+            
+    def create_layout(self):
+        layout.addWidget(self.import_button)
+        layout.addWidget(self.new_macro_button)
+        layout.addWidget(self.edit_macro_button)
+        layout.addWidget(self.delete_macro_button)
+        layout.addWidget(self.calibrate_button)
+        layout.addWidget(self.start_button)
+        layout.addWidget(self.stop_button)
+        layout.addWidget(self.macro_list)
+        layout.addWidget(self.details)
+        layout.addWidget(self.execute_button)
+        layout.addWidget(self.status)
         
             
     def get_assets_path(self, filename: str) -> Path:
