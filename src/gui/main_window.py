@@ -39,6 +39,7 @@ class MainWindow(QMainWindow):
         super().__init__()
                 
         self.setup_window()
+        self.create_widgets()
  
         header_layout = QHBoxLayout()
         layout.addSpacing(12)
@@ -128,37 +129,7 @@ class MainWindow(QMainWindow):
         
         self.calibration_thread = None
         self.calibration_worker = None
-        
-        self.profile_selector.currentIndexChanged.connect(
-            self.change_profile
-        )
-        
-        self.macro_list.currentRowChanged.connect(
-            self.show_macro
-        )
-        self.import_button.clicked.connect(
-            self.import_ghub
-        )
-        self.new_macro_button.clicked.connect(
-            self.open_macro_dialog
-        )
-        self.edit_macro_button.clicked.connect(
-            self.edit_selected_macro
-        )
-        self.delete_macro_button.clicked.connect(self.delete_selected_macro)
-        self.calibrate_button.clicked.connect(
-            self.calibrate_g_keys
-        )
-        self.start_button.clicked.connect(
-            self.start_runtime
-        )
-        self.stop_button.clicked.connect(
-            self.stop_runtime
-        )
-        self.execute_button.clicked.connect(
-            self.execute_selected_macro
-        )
-        
+     
         self.load_saved_profiles()
         
     
@@ -173,8 +144,7 @@ class MainWindow(QMainWindow):
             
     def create_widgets(self):
             self.profile_selector = QComboBox()
-            
-
+        
             self.import_button = QPushButton("Import from Ghub")
            
             self.new_macro_button = QPushButton("New Macro")
@@ -213,6 +183,37 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.details)
         layout.addWidget(self.execute_button)
         layout.addWidget(self.status)
+        
+    def connect_signals(self):
+        self.profile_selector.currentIndexChanged.connect(
+            self.change_profile
+        )
+        
+        self.macro_list.currentRowChanged.connect(
+            self.show_macro
+        )
+        self.import_button.clicked.connect(
+            self.import_ghub
+        )
+        self.new_macro_button.clicked.connect(
+            self.open_macro_dialog
+        )
+        self.edit_macro_button.clicked.connect(
+            self.edit_selected_macro
+        )
+        self.delete_macro_button.clicked.connect(self.delete_selected_macro)
+        self.calibrate_button.clicked.connect(
+            self.calibrate_g_keys
+        )
+        self.start_button.clicked.connect(
+            self.start_runtime
+        )
+        self.stop_button.clicked.connect(
+            self.stop_runtime
+        )
+        self.execute_button.clicked.connect(
+            self.execute_selected_macro
+        )
         
             
     def get_assets_path(self, filename: str) -> Path:
