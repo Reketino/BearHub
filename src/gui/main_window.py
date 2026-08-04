@@ -40,86 +40,8 @@ class MainWindow(QMainWindow):
                 
         self.setup_window()
         self.create_widgets()
- 
-        header_layout = QHBoxLayout()
-        layout.addSpacing(12)
-        
-        content_layout = QHBoxLayout()
-        
-        left_layout = QVBoxLayout()
-        right_layout = QVBoxLayout()
-        
-        content_layout.addLayout(left_layout, 1)
-        content_layout.addLayout(right_layout, 2)
-        
-        layout.addLayout(content_layout)
-        
-        logo = QLabel()
-        pixmap = QPixmap(
-            str(self.get_assets_path("bearhub-logo.png"))
-        )
-        logo.setPixmap(
-            pixmap.scaledToHeight(
-                64,
-                Qt.TransformationMode.SmoothTransformation,
-            )
-        )
-        
-        title_layout = QVBoxLayout()
-
-        title = QLabel("BearHub")
-        title.setObjectName("title")
-        
-        subtitle = QLabel("Open Source Macro Manager")
-        subtitle.setObjectName("subtitle")
-        
-        title_layout.addWidget(title)
-        title_layout.addWidget(subtitle)
-        
-        header_layout.addWidget(logo)
-        header_layout.addLayout(title_layout)
-        header_layout.addStretch()
-        
-        layout.addLayout(header_layout)
-        
-        self.profile_selector = QComboBox()
-        layout.addWidget(self.profile_selector)
-
-        self.import_button = QPushButton("Import from Ghub")
-        layout.addWidget(self.import_button)
-        
-        self.new_macro_button = QPushButton("New Macro")
-        layout.addWidget(self.new_macro_button)
-        
-        self.edit_macro_button = QPushButton("Edit Macro")
-        self.edit_macro_button.setEnabled(False)
-        layout.addWidget(self.edit_macro_button)
-        
-        self.delete_macro_button = QPushButton("Delete Macro")
-        self.delete_macro_button.setEnabled(False)
-        layout.addWidget(self.delete_macro_button)
-        
-        self.calibrate_button = QPushButton("Calibrate G-keys")
-        layout.addWidget(self.calibrate_button)
-        
-        self.start_button = QPushButton("Start Runtime")
-        layout.addWidget(self.start_button)
-        
-        self.stop_button = QPushButton("Stop Runtime")
-        self.stop_button.setEnabled(False)
-        layout.addWidget(self.stop_button)
-        
-        self.macro_list = QListWidget()
-        layout.addWidget(self.macro_list)
-        
-        self.details = QLabel("Select a macro")
-        layout.addWidget(self.details)
-        
-        self.execute_button = QPushButton("Execute")
-        layout.addWidget(self.execute_button)
-        
-        self.status = QLabel("Ready")
-        layout.addWidget(self.status)
+        self.create_layout()
+        self.connect_signals()
         
         self.macros = []
         self.profiles = []
@@ -134,13 +56,13 @@ class MainWindow(QMainWindow):
         
     
     def setup_window(self):
-            self.setWindowTitle("Bearhub")
-            self.resize(700, 500)
+        self.setWindowTitle("Bearhub")
+        self.resize(700, 500)
                 
-            central_widget = QWidget()
-            self.setCentralWidget(central_widget)
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
         
-            self.layout = QVBoxLayout(central_widget)
+        self.layout = QVBoxLayout(central_widget)
             
     def create_widgets(self):
             self.profile_selector = QComboBox()
