@@ -51,6 +51,11 @@ class MainWindow(QMainWindow):
         
         content_layout = QHBoxLayout()
         
+        left_layout = QVBoxLayout()
+        right_layout = QVBoxLayout()
+        
+        
+        
         layout.addLayout(content_layout)
         
         logo = QLabel()
