@@ -32,6 +32,7 @@ from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.calibration_worker import CalibrationWorker
 from gui.macro_dialog import MacroDialog
+from gui.controllers.macro_controller import MacroController
 
 
 class MainWindow(QMainWindow):
@@ -42,6 +43,8 @@ class MainWindow(QMainWindow):
         self.create_widgets()
         self.create_layout()
         self.connect_signals()
+        
+        self.macro_controller = MacroController(self)
         
         self.macros = []
         self.profiles = []
@@ -62,7 +65,7 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         
-        self.layout = QVBoxLayout(central_widget)
+        self.main_layout = QVBoxLayout(central_widget)
             
     def create_widgets(self):
             self.profile_selector = QComboBox()
@@ -122,8 +125,8 @@ class MainWindow(QMainWindow):
         header_layout.addLayout(title_layout)
         header_layout.addStretch()
 
-        self.layout.addLayout(header_layout)
-        self.layout.addSpacing(12)
+        self.main_layout.addLayout(header_layout)
+        self.main_layout.addSpacing(12)
 
         content_layout = QHBoxLayout()
 
@@ -133,7 +136,7 @@ class MainWindow(QMainWindow):
         content_layout.addLayout(left_layout, 1)
         content_layout.addLayout(right_layout, 2)
 
-        self.layout.addLayout(content_layout)
+        self.main_layout.addLayout(content_layout)
 
         profile_group = QGroupBox("Profile")
         actions_group = QGroupBox("Actions")
@@ -172,7 +175,7 @@ class MainWindow(QMainWindow):
         )
         
         self.macro_list.currentRowChanged.connect(
-            self.show_macro
+            self.macro_controller.show_macro
         )
         self.import_button.clicked.connect(
             self.import_ghub
@@ -194,7 +197,7 @@ class MainWindow(QMainWindow):
             self.stop_runtime
         )
         self.execute_button.clicked.connect(
-            self.execute_selected_macro
+            self.macro_controller.execute_selected_macro
         )
         
             
@@ -226,54 +229,7 @@ class MainWindow(QMainWindow):
         self.status.setText(
             f"Imported {len(macros)} macros."
         )
- 
-    #-------- DISPLAY MACROS --------#
-  
-    def display_macros(self, macros):
-        self.macros = macros
-        self.engine.load_profile(macros)
-        self.macro_list.clear()
-        
-        for macro in macros:
-            key_name = G_KEY_MAP.get(
-                macro.input_id,
-                "Unbound"
-            )
-            
-            self.macro_list.addItem(
-                f"{macro.name} [{key_name}]"
-            )
-    
-    #-------- SHOW MACRO --------#
-            
-    def show_macro(self, row):
-        if row < 0 or row >= len(self.macros):
-            self.edit_macro_button.setEnabled(False)
-            self.delete_macro_button.setEnabled(False)
-            return
-        
-        self.edit_macro_button.setEnabled(True)
-        self.delete_macro_button.setEnabled(True)
-        
-        macro = self.macros[row]
-        
-        key_name = G_KEY_MAP.get(
-            macro.input_id,
-            "Unbound"
-        )
-        
-        self.details.setText(
-            f"Name: {macro.name}\n\n"
-            f"Value:\n{macro.value}\n\n"
-            f"Key: {key_name}\n"
-            f"Preset: {macro.profile_name}\n"
-            f"Device: {macro.device_signature}"
-        )
-        
-        self.status.setText(
-            f"Selected {macro.name}"
-        )
-        
+   
     #-------- OPEN MACRO DIALOG --------#
         
     def open_macro_dialog(self):
@@ -519,7 +475,7 @@ class MainWindow(QMainWindow):
                 )
             )
             
-        self.display_macros(macros)
+        self.macro_controller.display_macros(macros)
         
     #-------- RELOAD CURRENT PROFILE --------#
         
@@ -577,33 +533,6 @@ class MainWindow(QMainWindow):
         
         self.load_profile(profile)
         
-    #-------- EXECUTE SELECTED MACROS --------#
-        
-    def execute_selected_macro(self):
-        row = self.macro_list.currentRow()
-        
-        if row < 0:
-            return
-        
-        macro = self.macros[row]
-        
-        self.status.setText(
-            f"Executing {macro.name} in 2 seconds..."
-        )
-        
-        QTimer.singleShot(
-            2000,
-            lambda: self.execute_macro(macro)
-        )
-    
-    #-------- EXECUTE MACRO --------#
-    
-    def execute_macro(self, macro):
-        self.engine.execute_macro(macro)
-        self.status.setText(
-            f"Executed {macro.name}"
-        )
-    
     #-------- START RUNTIME --------#
         
     def start_runtime(self):
