@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QComboBox,
     QMessageBox,
+    QGroupBox
 )
 
 from importers.ghub_importer import import_macros
@@ -36,18 +37,65 @@ from gui.macro_dialog import MacroDialog
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+                
+        self.setup_window()
+        self.create_widgets()
+        self.create_layout()
+        self.connect_signals()
+        
+        self.macros = []
+        self.profiles = []
+        self.current_profile_id = None
+        
+        self.engine = MacroEngine()
+        
+        self.calibration_thread = None
+        self.calibration_worker = None
+     
+        self.load_saved_profiles()
+        
+    
+    def setup_window(self):
         self.setWindowTitle("Bearhub")
         self.resize(700, 500)
-        
+                
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
-        layout = QVBoxLayout(central_widget)
         
+        self.layout = QVBoxLayout(central_widget)
+            
+    def create_widgets(self):
+            self.profile_selector = QComboBox()
+        
+            self.import_button = QPushButton("Import from Ghub")
+           
+            self.new_macro_button = QPushButton("New Macro")
+            
+            self.edit_macro_button = QPushButton("Edit Macro")
+            self.edit_macro_button.setEnabled(False)
+            
+            self.delete_macro_button = QPushButton("Delete Macro")
+            self.delete_macro_button.setEnabled(False)
+            
+            self.calibrate_button = QPushButton("Calibrate G-keys")
+            
+            self.start_button = QPushButton("Start Runtime")
+            
+            self.stop_button = QPushButton("Stop Runtime")
+            self.stop_button.setEnabled(False)
+           
+            self.macro_list = QListWidget()
+             
+            self.details = QLabel("Select a macro")
+            
+            self.execute_button = QPushButton("Execute")
+            
+            self.status = QLabel("Ready")
+            
+            
+    def create_layout(self):
         header_layout = QHBoxLayout()
-        layout.addSpacing(12)
-        
+
         logo = QLabel()
         pixmap = QPixmap(
             str(self.get_assets_path("bearhub-logo.png"))
@@ -58,72 +106,67 @@ class MainWindow(QMainWindow):
                 Qt.TransformationMode.SmoothTransformation,
             )
         )
-        
+
         title_layout = QVBoxLayout()
 
         title = QLabel("BearHub")
         title.setObjectName("title")
-        
+
         subtitle = QLabel("Open Source Macro Manager")
         subtitle.setObjectName("subtitle")
-        
+
         title_layout.addWidget(title)
         title_layout.addWidget(subtitle)
-        
+
         header_layout.addWidget(logo)
         header_layout.addLayout(title_layout)
         header_layout.addStretch()
-        
-        layout.addLayout(header_layout)
-        
-        self.profile_selector = QComboBox()
-        layout.addWidget(self.profile_selector)
 
-        self.import_button = QPushButton("Import from Ghub")
-        layout.addWidget(self.import_button)
+        self.layout.addLayout(header_layout)
+        self.layout.addSpacing(12)
+
+        content_layout = QHBoxLayout()
+
+        left_layout = QVBoxLayout()
+        right_layout = QVBoxLayout()
+
+        content_layout.addLayout(left_layout, 1)
+        content_layout.addLayout(right_layout, 2)
+
+        self.layout.addLayout(content_layout)
+
+        profile_group = QGroupBox("Profile")
+        actions_group = QGroupBox("Actions")
+        runtime_group = QGroupBox("Runtime")
+
+        left_layout.addWidget(profile_group)
+        left_layout.addWidget(actions_group)
+        left_layout.addWidget(runtime_group)
+        left_layout.addStretch()
+
+        profile_layout = QVBoxLayout(profile_group)
+
+        profile_layout.addWidget(self.profile_selector)
+        profile_layout.addWidget(self.import_button)
+
+        actions_layout = QVBoxLayout(actions_group)
+
+        actions_layout.addWidget(self.new_macro_button)
+        actions_layout.addWidget(self.edit_macro_button)
+        actions_layout.addWidget(self.delete_macro_button)
+        actions_layout.addWidget(self.execute_button)
+
+        runtime_layout = QVBoxLayout(runtime_group)
+
+        runtime_layout.addWidget(self.calibrate_button)
+        runtime_layout.addWidget(self.start_button)
+        runtime_layout.addWidget(self.stop_button)
+
+        right_layout.addWidget(self.macro_list)
+        right_layout.addWidget(self.details)
+        right_layout.addWidget(self.status)
         
-        self.new_macro_button = QPushButton("New Macro")
-        layout.addWidget(self.new_macro_button)
-        
-        self.edit_macro_button = QPushButton("Edit Macro")
-        self.edit_macro_button.setEnabled(False)
-        layout.addWidget(self.edit_macro_button)
-        
-        self.delete_macro_button = QPushButton("Delete Macro")
-        self.delete_macro_button.setEnabled(False)
-        layout.addWidget(self.delete_macro_button)
-        
-        self.calibrate_button = QPushButton("Calibrate G-keys")
-        layout.addWidget(self.calibrate_button)
-        
-        self.start_button = QPushButton("Start Runtime")
-        layout.addWidget(self.start_button)
-        
-        self.stop_button = QPushButton("Stop Runtime")
-        self.stop_button.setEnabled(False)
-        layout.addWidget(self.stop_button)
-        
-        self.macro_list = QListWidget()
-        layout.addWidget(self.macro_list)
-        
-        self.details = QLabel("Select a macro")
-        layout.addWidget(self.details)
-        
-        self.execute_button = QPushButton("Execute")
-        layout.addWidget(self.execute_button)
-        
-        self.status = QLabel("Ready")
-        layout.addWidget(self.status)
-        
-        self.macros = []
-        self.profiles = []
-        self.current_profile_id = None
-        
-        self.engine = MacroEngine()
-        
-        self.calibration_thread = None
-        self.calibration_worker = None
-        
+    def connect_signals(self):
         self.profile_selector.currentIndexChanged.connect(
             self.change_profile
         )
@@ -154,9 +197,7 @@ class MainWindow(QMainWindow):
             self.execute_selected_macro
         )
         
-        self.load_saved_profiles()
-        
-        
+            
     def get_assets_path(self, filename: str) -> Path:
         project_root = Path(__file__).resolve().parent.parent.parent
         return project_root / "assets" / filename
