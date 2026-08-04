@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QComboBox,
     QMessageBox,
+    QGroupBox
 )
 
 from importers.ghub_importer import import_macros
@@ -47,6 +48,10 @@ class MainWindow(QMainWindow):
         
         header_layout = QHBoxLayout()
         layout.addSpacing(12)
+        
+        content_layout = QHBoxLayout()
+        
+        layout.addLayout(content_layout)
         
         logo = QLabel()
         pixmap = QPixmap(
