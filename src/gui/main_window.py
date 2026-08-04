@@ -37,14 +37,8 @@ from gui.macro_dialog import MacroDialog
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        
-        self.setWindowTitle("Bearhub")
-        self.resize(700, 500)
-                        
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
                 
-        layout = QVBoxLayout(central_widget)
+        self.setup_window()
  
         header_layout = QHBoxLayout()
         layout.addSpacing(12)
