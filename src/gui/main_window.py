@@ -37,15 +37,15 @@ from gui.macro_dialog import MacroDialog
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        
         self.setWindowTitle("Bearhub")
         self.resize(700, 500)
-        
+                        
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
+                
         layout = QVBoxLayout(central_widget)
-        
+ 
         header_layout = QHBoxLayout()
         layout.addSpacing(12)
         
@@ -167,7 +167,17 @@ class MainWindow(QMainWindow):
         
         self.load_saved_profiles()
         
+    
+    def setup_window(self):
+            self.setWindowTitle("Bearhub")
+            self.resize(700, 500)
+                
+            central_widget = QWidget()
+            self.setCentralWidget(central_widget)
         
+            self.layout = QVBoxLayout(central_widget)
+        
+            
     def get_assets_path(self, filename: str) -> Path:
         project_root = Path(__file__).resolve().parent.parent.parent
         return project_root / "assets" / filename
