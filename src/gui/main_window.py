@@ -42,9 +42,11 @@ class MainWindow(QMainWindow):
         self.setup_window()
         self.create_widgets()
         self.create_layout()
-        self.connect_signals()
-        
+       
         self.macro_controller = MacroController(self)
+        
+         self.connect_signals()
+        
         
         self.macros = []
         self.profiles = []
