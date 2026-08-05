@@ -147,22 +147,22 @@ class MacroController:
             "src/storage/profile.json",
         )
             
-        self.load_saved_profiles()
+        self.view.load_saved_profiles()
             
         bearhub_index = next(
                 (
                 index
-                for index, profile in enumerate(self.profiles)
+                for index, profile in enumerate(self.view.profiles)
                 if profile.get("id") == "bearhub"
             ),
             -1
         )
             
         if bearhub_index >= 0:
-            self.profile_selector.setCurrentIndex(
+            self.view.profile_selector.setCurrentIndex(
                 bearhub_index
             )
             
-        self.status.setText(
+        self.view.status.setText(
             f"Saved {macro.name}."
         )
