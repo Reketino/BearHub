@@ -131,7 +131,7 @@ class MacroController:
             "src/storage/profile.json",
         ):
             QMessageBox.warning(
-                self,
+                self.view,
                 "G-key already in use",
                 f"{data['key']} is already assigned. "
                 "to another macro in BearHub.",
