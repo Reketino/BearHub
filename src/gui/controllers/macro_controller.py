@@ -1,7 +1,20 @@
 from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import (
+    QMessageBox,
+    QDialog,
+)
+
+from constants.g_keys import G_KEY_MAP
+from constants.macro_types import TEXT
 
 from gui.macro_dialog import MacroDialog
-from constants.g_keys import G_KEY_MAP
+
+from models.macro import Macro
+
+from storage.profile_storage import (
+    add_macro,
+    is_key_available,
+)
 
 class MacroController:
     def __init__(self, window):
@@ -82,4 +95,165 @@ class MacroController:
         self.view.engine.execute_macro(macro)
         self.view.status.setText(
             f"Executed {macro.name}"
+        )
+        
+    
+     #-------- OPEN MACRO DIALOG --------#
+            
+    def open_macro_dialog(self):
+        dialog = MacroDialog(self.view)
+            
+        result = dialog.exec()
+            
+        if result != QDialog.DialogCode.Accepted:
+            return
+            
+        data = dialog.get_data()
+            
+        input_id = next(
+            (
+                input_id
+                for input_id, key_name in G_KEY_MAP.items()
+                if key_name == data["key"]
+            ),
+            None,
+            )
+            
+        if input_id is None:
+            self.view.status.setText(
+                f"Could not find input ID for {data['key']}."
+            )
+            return
+            
+        if not is_key_available(
+            "bearhub",
+            input_id,
+            "src/storage/profile.json",
+        ):
+            QMessageBox.warning(
+                self.view,
+                "G-key already in use",
+                f"{data['key']} is already assigned. "
+                "to another macro in BearHub.",
+            )
+            return
+            
+        macro = Macro(
+            id="",
+            name=data["name"],
+            value=data["value"],
+            macro_type=TEXT,
+            profile_name="BearHub",
+            device_signature="",
+            input_id=input_id,
+        )
+            
+        add_macro(
+            macro,
+            "src/storage/profile.json",
+        )
+            
+        self.view.load_saved_profiles()
+            
+        bearhub_index = next(
+            (
+                index
+                for index, profile in enumerate(self.view.profiles)
+                if profile.get("id") == "bearhub"
+            ),
+            -1
+        )
+            
+        if bearhub_index >= 0:
+            self.view.profile_selector.setCurrentIndex(
+                bearhub_index
+            )
+            
+        self.view.status.setText(
+            f"Saved {macro.name}."
+        )
+        
+ #-------- EDIT SELECTED MACRO --------#
+        
+    def edit_selected_macro(self):
+        row = self.macro_list.currentRow()
+        
+        if row < 0 or row >= len(self.macros):
+            self.status.setText(
+                "Select a macro to edit."
+            )
+            return
+        
+        if self.current_profile_id is None:
+            self.status.setText(
+                "No profile selected."
+            )
+            return
+        
+        macro = self.macros[row]
+        
+        dialog = MacroDialog(
+            self,
+            macro=macro,
+        )
+        
+        result = dialog.exec()
+        
+        if result != QDialog.DialogCode.Accepted:
+            return
+        
+        data = dialog.get_data()
+        
+        input_id = next(
+            (
+                input_id
+                for input_id, key_name in G_KEY_MAP.items()
+                if key_name == data["key"]
+            ),
+            "",
+        )
+        
+        if not is_key_available(
+            self.current_profile_id,
+            input_id,
+            "src/storage/profile.json",
+            ignore_index=row
+        ):
+            QMessageBox.warning(
+                self,
+                "G-key already in use",
+                f"{data['key']} is already assigned "
+                "to another macro in this profile."
+            )
+            return
+        
+        updated_macro = Macro(
+            id=macro.id,
+            name=data["name"],
+            value=data["value"],
+            macro_type=macro.macro_type,
+            profile_name=macro.profile_name,
+            device_signature=macro.device_signature,
+            input_id=input_id,
+        )
+        
+        success = update_macro(
+            self.current_profile_id,
+            row,
+            updated_macro,
+            "src/storage/profile.json"
+        )
+        
+        if not success:
+            self.status.setText(
+                "Could not update the macro"
+            )
+            return
+        
+        self.reload_current_profile()
+        if row < self.macro_list.count():
+            self.macro_list.setCurrentRow(row)
+        
+        self.status.setText(
+            f"Updated {updated_macro.name}"
         )
