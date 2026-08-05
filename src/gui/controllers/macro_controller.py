@@ -156,7 +156,7 @@ class MacroController:
         self.view.load_saved_profiles()
             
         bearhub_index = next(
-                (
+            (
                 index
                 for index, profile in enumerate(self.view.profiles)
                 if profile.get("id") == "bearhub"
