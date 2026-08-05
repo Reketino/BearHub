@@ -1,10 +1,16 @@
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QMessageBox, QDialog
+from PySide6.QtWidgets import (
+    QMessageBox,
+    QDialog,
+)
+
+from constants.g_keys import G_KEY_MAP
+from constants.macro_types import TEXT
 
 from gui.macro_dialog import MacroDialog
-from constants.g_keys import G_KEY_MAP
+
 from models.macro import Macro
-from constants.macro_types import TEXT
+
 from storage.profile_storage import (
     add_macro,
     is_key_available,
