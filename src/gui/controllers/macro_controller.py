@@ -1,4 +1,5 @@
 from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QMessageBox
 
 from gui.macro_dialog import MacroDialog
 from constants.g_keys import G_KEY_MAP
@@ -88,7 +89,7 @@ class MacroController:
      #-------- OPEN MACRO DIALOG --------#
             
     def open_macro_dialog(self):
-        dialog = MacroDialog(self)
+        dialog = MacroDialog(self.view)
             
         result = dialog.exec()
             
@@ -97,7 +98,7 @@ class MacroController:
             
         data = dialog.get_data()
             
-         input_id = next(
+        input_id = next(
             (
                 input_id
                 for input_id, key_name in G_KEY_MAP.items()
@@ -107,7 +108,7 @@ class MacroController:
             )
             
         if input_id is None:
-            self.status.setText(
+            self.view.status.setText(
                 f"Could not find input ID for {data['key']}."
             )
             return
