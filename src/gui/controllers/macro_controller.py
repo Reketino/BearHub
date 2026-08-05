@@ -13,6 +13,7 @@ from models.macro import Macro
 
 from storage.profile_storage import (
     add_macro,
+    update_macro,
     is_key_available,
 )
 
@@ -176,24 +177,24 @@ class MacroController:
  #-------- EDIT SELECTED MACRO --------#
         
     def edit_selected_macro(self):
-        row = self.macro_list.currentRow()
+        row = self.view.macro_list.currentRow()
         
-        if row < 0 or row >= len(self.macros):
-            self.status.setText(
+        if row < 0 or row >= len(self.view.macros):
+            self.view.status.setText(
                 "Select a macro to edit."
             )
             return
         
-        if self.current_profile_id is None:
-            self.status.setText(
+        if self.view.current_profile_id is None:
+            self.view.status.setText(
                 "No profile selected."
             )
             return
         
-        macro = self.macros[row]
+        macro = self.view.macros[row]
         
         dialog = MacroDialog(
-            self,
+            self.view,
             macro=macro,
         )
         
@@ -214,13 +215,13 @@ class MacroController:
         )
         
         if not is_key_available(
-            self.current_profile_id,
+            self.view.current_profile_id,
             input_id,
             "src/storage/profile.json",
             ignore_index=row
         ):
             QMessageBox.warning(
-                self,
+                self.view,
                 "G-key already in use",
                 f"{data['key']} is already assigned "
                 "to another macro in this profile."
@@ -238,22 +239,22 @@ class MacroController:
         )
         
         success = update_macro(
-            self.current_profile_id,
+            self.view.current_profile_id,
             row,
             updated_macro,
             "src/storage/profile.json"
         )
         
         if not success:
-            self.status.setText(
+            self.view.status.setText(
                 "Could not update the macro"
             )
             return
         
-        self.reload_current_profile()
-        if row < self.macro_list.count():
-            self.macro_list.setCurrentRow(row)
+        self.view.reload_current_profile()
+        if row < self.view.macro_list.count():
+            self.view.macro_list.setCurrentRow(row)
         
-        self.status.setText(
+        self.view.status.setText(
             f"Updated {updated_macro.name}"
         )

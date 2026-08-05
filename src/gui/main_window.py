@@ -186,7 +186,7 @@ class MainWindow(QMainWindow):
             self.macro_controller.open_macro_dialog
         )
         self.edit_macro_button.clicked.connect(
-            self.edit_selected_macro
+            self.macro_controller.edit_selected_macro
         )
         self.delete_macro_button.clicked.connect(self.delete_selected_macro)
         self.calibrate_button.clicked.connect(
