@@ -181,7 +181,7 @@ class MainWindow(QMainWindow):
             self.import_ghub
         )
         self.new_macro_button.clicked.connect(
-            self.open_macro_dialog
+            self.macro_controller.open_macro_dialog
         )
         self.edit_macro_button.clicked.connect(
             self.edit_selected_macro
