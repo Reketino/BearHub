@@ -188,7 +188,9 @@ class MainWindow(QMainWindow):
         self.edit_macro_button.clicked.connect(
             self.macro_controller.edit_selected_macro
         )
-        self.delete_macro_button.clicked.connect(self.delete_selected_macro)
+        self.delete_macro_button.clicked.connect(
+            self.macro_controller.delete_selected_macro
+        )
         self.calibrate_button.clicked.connect(
             self.calibrate_g_keys
         )
