@@ -340,7 +340,7 @@ class MacroController:
             "src/storage/profile.json"
         )
         
-        self.load_saved_profiles()
-        self.status.setText(
+        self.view.load_saved_profiles()
+        self.view.status.setText(
             f"Imported {len(macros)} macros."
         )
