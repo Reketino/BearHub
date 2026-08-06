@@ -11,27 +11,20 @@ from PySide6.QtWidgets import (
     QPushButton,
     QListWidget,
     QFileDialog,
-    QDialog,
     QComboBox,
-    QMessageBox,
     QGroupBox
 )
 
 from importers.ghub_importer import import_macros
 from storage.profile_storage import ( 
-    add_macro,
     save_profile,
     load_profiles,
-    update_macro,
-    delete_macro,
-    is_key_available,
     )
 from constants.g_keys import G_KEY_MAP
 from constants.macro_types import TEXT
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.calibration_worker import CalibrationWorker
-from gui.macro_dialog import MacroDialog
 from gui.controllers.macro_controller import MacroController
 
 
@@ -180,7 +173,7 @@ class MainWindow(QMainWindow):
             self.macro_controller.show_macro
         )
         self.import_button.clicked.connect(
-            self.import_ghub
+            self.macro_controller.import_ghub
         )
         self.new_macro_button.clicked.connect(
             self.macro_controller.open_macro_dialog
@@ -188,7 +181,9 @@ class MainWindow(QMainWindow):
         self.edit_macro_button.clicked.connect(
             self.macro_controller.edit_selected_macro
         )
-        self.delete_macro_button.clicked.connect(self.delete_selected_macro)
+        self.delete_macro_button.clicked.connect(
+            self.macro_controller.delete_selected_macro
+        )
         self.calibrate_button.clicked.connect(
             self.calibrate_g_keys
         )
@@ -207,88 +202,7 @@ class MainWindow(QMainWindow):
         project_root = Path(__file__).resolve().parent.parent.parent
         return project_root / "assets" / filename
         
-    #-------- IMPORT GHUB --------#
-    
-    def import_ghub(self):
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Choose settings.db",
-            "",
-            "Database (*.db)"
-        )
-        
-        if not file_path:
-            return
-       
-        macros = import_macros(file_path)
-        
-        save_profile(
-            macros,
-            "src/storage/profile.json"
-        )
-        
-        self.load_saved_profiles()
-        self.status.setText(
-            f"Imported {len(macros)} macros."
-        )
-        
-        
-    #-------- DELETE SELECTED MACRO --------#
-    
-    def delete_selected_macro(self):
-        row = self.macro_list.currentRow()
-        
-        if row < 0 or row >= len(self.macros):
-            return
-        
-        if self.current_profile_id is None:
-            self.status.setText(
-                "No profile selected."
-            )
-            return
-        
-        macro = self.macros[row]
-        
-        answer = QMessageBox.question(
-            self,
-            "Delete Macro",
-            f"Delete '{macro.name}'?",
-            QMessageBox.StandardButton.Yes
-            | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
-        )
-        
-        if answer != QMessageBox.StandardButton.Yes:
-            return
-        
-        success = delete_macro(
-            self.current_profile_id,
-            row,
-            "src/storage/profile.json"
-        )
-        
-        if not success:
-            self.status.setText(
-                "Could not delete macro."
-            )
-            return
-        
-        self.reload_current_profile()
-        
-        if self.macro_list.count() > 0:
-            new_row = min(
-                row,
-                self.macro_list.count() - 1,
-            )
-            
-            self.macro_list.setCurrentRow(
-                new_row
-            )
-        
-        self.status.setText(
-            f"Deleted {macro.name}."
-        )
-                
+                     
     #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):

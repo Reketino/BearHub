@@ -2,6 +2,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import (
     QMessageBox,
     QDialog,
+    QFileDialog,
 )
 
 from constants.g_keys import G_KEY_MAP
@@ -11,10 +12,14 @@ from gui.macro_dialog import MacroDialog
 
 from models.macro import Macro
 
+from importers.ghub_importer import import_macros
+
 from storage.profile_storage import (
     add_macro,
     update_macro,
+    delete_macro,
     is_key_available,
+    save_profile,
 )
 
 class MacroController:
@@ -257,4 +262,85 @@ class MacroController:
         
         self.view.status.setText(
             f"Updated {updated_macro.name}"
+        )
+        
+ #-------- DELETE SELECTED MACRO --------#
+    
+    def delete_selected_macro(self):
+        row = self.view.macro_list.currentRow()
+        
+        if row < 0 or row >= len(self.view.macros):
+            return
+        
+        if self.view.current_profile_id is None:
+            self.view.status.setText(
+                "No profile selected."
+            )
+            return
+        
+        macro = self.view.macros[row]
+        
+        answer = QMessageBox.question(
+            self.view,
+            "Delete Macro",
+            f"Delete '{macro.name}'?",
+            QMessageBox.StandardButton.Yes
+            | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        
+        success = delete_macro(
+            self.view.current_profile_id,
+            row,
+            "src/storage/profile.json"
+        )
+        
+        if not success:
+            self.view.status.setText(
+                "Could not delete macro."
+            )
+            return
+        
+        self.view.reload_current_profile()
+        
+        if self.view.macro_list.count() > 0:
+            new_row = min(
+                row,
+                self.view.macro_list.count() - 1,
+            )
+            
+            self.view.macro_list.setCurrentRow(
+                new_row
+            )
+        
+        self.view.status.setText(
+            f"Deleted {macro.name}."
+        )
+        
+    #-------- IMPORT GHUB --------#
+    
+    def import_ghub(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self.view,
+            "Choose settings.db",
+            "",
+            "Database (*.db)"
+        )
+        
+        if not file_path:
+            return
+       
+        macros = import_macros(file_path)
+        
+        save_profile(
+            macros,
+            "src/storage/profile.json"
+        )
+        
+        self.view.load_saved_profiles()
+        self.view.status.setText(
+            f"Imported {len(macros)} macros."
         )
