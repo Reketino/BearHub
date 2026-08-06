@@ -14,6 +14,7 @@ from models.macro import Macro
 from storage.profile_storage import (
     add_macro,
     update_macro,
+    delete_macro,
     is_key_available,
 )
 
