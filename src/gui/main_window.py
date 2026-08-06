@@ -11,20 +11,14 @@ from PySide6.QtWidgets import (
     QPushButton,
     QListWidget,
     QFileDialog,
-    QDialog,
     QComboBox,
-    QMessageBox,
     QGroupBox
 )
 
 from importers.ghub_importer import import_macros
 from storage.profile_storage import ( 
-    add_macro,
     save_profile,
     load_profiles,
-    update_macro,
-    delete_macro,
-    is_key_available,
     )
 from constants.g_keys import G_KEY_MAP
 from constants.macro_types import TEXT
