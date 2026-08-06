@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from PySide6.QtGui import QPixmap
-from PySide6.QtCore import QThread, QTimer, Qt
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -10,48 +10,43 @@ from PySide6.QtWidgets import (
     QLabel,
     QPushButton,
     QListWidget,
-    QFileDialog,
     QComboBox,
     QGroupBox
 )
 
-from importers.ghub_importer import import_macros
-from storage.profile_storage import ( 
-    save_profile,
-    load_profiles,
-    )
-from constants.g_keys import G_KEY_MAP
+from storage.profile_storage import (load_profiles)
 from constants.macro_types import TEXT
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
-from runtime.calibration_worker import CalibrationWorker
 from gui.controllers.macro_controller import MacroController
+from gui.controllers.runtime_controller import RuntimeController
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-                
-        self.setup_window()
-        self.create_widgets()
-        self.create_layout()
-       
-        self.macro_controller = MacroController(self)
-        
-        self.connect_signals()
-        
         
         self.macros = []
         self.profiles = []
         self.current_profile_id = None
         
         self.engine = MacroEngine()
-        
+                
+        self.setup_window()
+        self.create_widgets()
+        self.create_layout()
+       
+        self.macro_controller = MacroController(self)
+        self.runtime_controller = RuntimeController(self)
+         
         self.calibration_thread = None
         self.calibration_worker = None
+        
+        self.connect_signals()
      
         self.load_saved_profiles()
         
+    #-------- SETUP WINDOW --------#
     
     def setup_window(self):
         self.setWindowTitle("Bearhub")
@@ -61,35 +56,38 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         
         self.main_layout = QVBoxLayout(central_widget)
+        
+    #-------- CREATE WIDGETS --------# 
             
     def create_widgets(self):
-            self.profile_selector = QComboBox()
+        self.profile_selector = QComboBox()
         
-            self.import_button = QPushButton("Import from Ghub")
+        self.import_button = QPushButton("Import from Ghub")
            
-            self.new_macro_button = QPushButton("New Macro")
+        self.new_macro_button = QPushButton("New Macro")
             
-            self.edit_macro_button = QPushButton("Edit Macro")
-            self.edit_macro_button.setEnabled(False)
+        self.edit_macro_button = QPushButton("Edit Macro")
+        self.edit_macro_button.setEnabled(False)
             
-            self.delete_macro_button = QPushButton("Delete Macro")
-            self.delete_macro_button.setEnabled(False)
+        self.delete_macro_button = QPushButton("Delete Macro")
+        self.delete_macro_button.setEnabled(False)
             
-            self.calibrate_button = QPushButton("Calibrate G-keys")
+        self.calibrate_button = QPushButton("Calibrate G-keys")
             
-            self.start_button = QPushButton("Start Runtime")
+        self.start_button = QPushButton("Start Runtime")
             
-            self.stop_button = QPushButton("Stop Runtime")
-            self.stop_button.setEnabled(False)
+        self.stop_button = QPushButton("Stop Runtime")
+        self.stop_button.setEnabled(False)
            
-            self.macro_list = QListWidget()
+        self.macro_list = QListWidget()
              
-            self.details = QLabel("Select a macro")
+        self.details = QLabel("Select a macro")
             
-            self.execute_button = QPushButton("Execute")
+        self.execute_button = QPushButton("Execute")
             
-            self.status = QLabel("Ready")
+        self.status = QLabel("Ready")
             
+    #-------- CREATE LAYOUT --------#
             
     def create_layout(self):
         header_layout = QHBoxLayout()
@@ -164,6 +162,8 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(self.details)
         right_layout.addWidget(self.status)
         
+    #-------- CONNECT SIGNALS --------#        
+        
     def connect_signals(self):
         self.profile_selector.currentIndexChanged.connect(
             self.change_profile
@@ -185,18 +185,19 @@ class MainWindow(QMainWindow):
             self.macro_controller.delete_selected_macro
         )
         self.calibrate_button.clicked.connect(
-            self.calibrate_g_keys
+            self.runtime_controller.calibrate_g_keys
         )
         self.start_button.clicked.connect(
-            self.start_runtime
+            self.runtime_controller.start_runtime
         )
         self.stop_button.clicked.connect(
-            self.stop_runtime
+            self.runtime_controller.stop_runtime
         )
         self.execute_button.clicked.connect(
             self.macro_controller.execute_selected_macro
         )
-        
+    
+    #-------- GET ASSTETS PATH --------#    
             
     def get_assets_path(self, filename: str) -> Path:
         project_root = Path(__file__).resolve().parent.parent.parent
@@ -256,8 +257,6 @@ class MainWindow(QMainWindow):
         
         self.load_profile(profile)
     
-        
-    
     #-------- LOAD SAVED PROFILES --------#
      
     def load_saved_profiles(self):
@@ -290,124 +289,3 @@ class MainWindow(QMainWindow):
         
         self.load_profile(profile)
         
-    #-------- START RUNTIME --------#
-        
-    def start_runtime(self):
-        self.engine.start()
-        
-        self.start_button.setEnabled(False)
-        self.calibrate_button.setEnabled(False)
-        self.stop_button.setEnabled(True)
-        
-        self.status.setText(
-            "Runtime started."
-        )
-    
-    #-------- STOP RUNTIME --------#
-        
-    def stop_runtime(self):
-        self.engine.stop()
-        
-        self.start_button.setEnabled(True)
-        self.calibrate_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-        
-        self.status.setText(
-            "Runtime stopped."
-        )
-    
-    #-------- CALIBRATE G KEYS --------#
-        
-    def calibrate_g_keys(self):
-        self.status.setText(
-            "Starting calibration..."
-        )
-        
-        self.calibrate_button.setEnabled(False)
-        self.start_button.setEnabled(False)
-        self.stop_button.setEnabled(False)
-        
-        self.calibration_thread = QThread()
-        self.calibration_worker = CalibrationWorker()
-        
-        self.calibration_worker.moveToThread(
-            self.calibration_thread
-        )
-        
-        self.calibration_thread.started.connect(
-            self.calibration_worker.run
-        )
-        
-        self.calibration_worker.finished.connect(
-            self.calibration_finished
-        )
-        
-        self.calibration_worker.progress.connect(
-            self.calibration_progress
-        )
-        
-        self.calibration_worker.error.connect(
-            self.calibration_failed
-        )
-        
-        self.calibration_worker.finished.connect(
-            self.calibration_thread.quit
-        )
-        self.calibration_worker.error.connect(
-            self.calibration_thread.quit
-        )
-        self.calibration_worker.finished.connect(
-            self.calibration_worker.deleteLater
-        )
-        self.calibration_worker.error.connect(
-            self.calibration_worker.deleteLater
-        )
-        self.calibration_thread.finished.connect(
-            self.calibration_thread.deleteLater
-        )
-        self.calibration_thread.finished.connect(
-            self.calibration_cleanup
-        )
-        
-        self.calibration_thread.start()
-        
-    #-------- CALIBRATION PROGRESS --------#
-    
-    def calibration_progress(self, key_name):
-        self.status.setText(
-            f"Press {key_name}..."
-        )
-        
-    #-------- CALIBRATION FINISHED --------#
-            
-    def calibration_finished(self):
-        self.status.setText(
-            "Calibration completed."
-        )
-        
-        self.calibrate_button.setEnabled(True)
-        self.start_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-        
-    #-------- CALIBRATION FAILED--------#
-        
-    def calibration_failed(self, message):
-        self.status.setText(
-            "Calibration failed."
-        )
-        
-        self.calibrate_button.setEnabled(True)
-        self.start_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-                
-        print(
-            f"Calibration error: {message}"
-        )
-            
-    def calibration_cleanup(self):
-        self.calibration_worker = None
-        self.calibration_thread = None
-            
-
-        
-       
