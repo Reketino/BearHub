@@ -202,31 +202,7 @@ class MainWindow(QMainWindow):
         project_root = Path(__file__).resolve().parent.parent.parent
         return project_root / "assets" / filename
         
-    #-------- IMPORT GHUB --------#
-    
-    def import_ghub(self):
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Choose settings.db",
-            "",
-            "Database (*.db)"
-        )
-        
-        if not file_path:
-            return
-       
-        macros = import_macros(file_path)
-        
-        save_profile(
-            macros,
-            "src/storage/profile.json"
-        )
-        
-        self.load_saved_profiles()
-        self.status.setText(
-            f"Imported {len(macros)} macros."
-        )
-                
+                     
     #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):
