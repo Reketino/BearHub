@@ -12,11 +12,14 @@ from gui.macro_dialog import MacroDialog
 
 from models.macro import Macro
 
+from importers.ghub_importer import import_macros
+
 from storage.profile_storage import (
     add_macro,
     update_macro,
     delete_macro,
     is_key_available,
+    save_profile,
 )
 
 class MacroController:
