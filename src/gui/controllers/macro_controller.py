@@ -2,6 +2,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import (
     QMessageBox,
     QDialog,
+    QFileDialog,
 )
 
 from constants.g_keys import G_KEY_MAP
@@ -314,4 +315,29 @@ class MacroController:
         
         self.view.status.setText(
             f"Deleted {macro.name}."
+        )
+        
+    #-------- IMPORT GHUB --------#
+    
+    def import_ghub(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self.view,
+            "Choose settings.db",
+            "",
+            "Database (*.db)"
+        )
+        
+        if not file_path:
+            return
+       
+        macros = import_macros(file_path)
+        
+        save_profile(
+            macros,
+            "src/storage/profile.json"
+        )
+        
+        self.load_saved_profiles()
+        self.status.setText(
+            f"Imported {len(macros)} macros."
         )
