@@ -25,7 +25,6 @@ from constants.macro_types import TEXT
 from models.macro import Macro
 from runtime.macro_engine import MacroEngine
 from runtime.calibration_worker import CalibrationWorker
-from gui.macro_dialog import MacroDialog
 from gui.controllers.macro_controller import MacroController
 
 
