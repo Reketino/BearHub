@@ -231,63 +231,6 @@ class MainWindow(QMainWindow):
         self.status.setText(
             f"Imported {len(macros)} macros."
         )
-        
-        
-    #-------- DELETE SELECTED MACRO --------#
-    
-    def delete_selected_macro(self):
-        row = self.macro_list.currentRow()
-        
-        if row < 0 or row >= len(self.macros):
-            return
-        
-        if self.current_profile_id is None:
-            self.status.setText(
-                "No profile selected."
-            )
-            return
-        
-        macro = self.macros[row]
-        
-        answer = QMessageBox.question(
-            self,
-            "Delete Macro",
-            f"Delete '{macro.name}'?",
-            QMessageBox.StandardButton.Yes
-            | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
-        )
-        
-        if answer != QMessageBox.StandardButton.Yes:
-            return
-        
-        success = delete_macro(
-            self.current_profile_id,
-            row,
-            "src/storage/profile.json"
-        )
-        
-        if not success:
-            self.status.setText(
-                "Could not delete macro."
-            )
-            return
-        
-        self.reload_current_profile()
-        
-        if self.macro_list.count() > 0:
-            new_row = min(
-                row,
-                self.macro_list.count() - 1,
-            )
-            
-            self.macro_list.setCurrentRow(
-                new_row
-            )
-        
-        self.status.setText(
-            f"Deleted {macro.name}."
-        )
                 
     #-------- LOAD PROFILE --------#
         
