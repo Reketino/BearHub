@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
             self.macro_controller.show_macro
         )
         self.import_button.clicked.connect(
-            self.import_ghub
+            self.macro_controller.import_ghub
         )
         self.new_macro_button.clicked.connect(
             self.macro_controller.open_macro_dialog
