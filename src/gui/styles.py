@@ -13,6 +13,13 @@ QLabel {
     background-color: transparent;
 }
 
+QTextEdit {
+    background-color: #202428;
+    border: 1px solid #343a40;
+    border-radius: 7px;
+    padding: 8px;
+}
+
 QLabel#title {
     font-size: 28px;
     font-weight: bold;
