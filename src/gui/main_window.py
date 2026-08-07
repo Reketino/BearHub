@@ -163,6 +163,7 @@ class MainWindow(QMainWindow):
         actions_layout.addWidget(self.execute_button)
 
         runtime_layout = QVBoxLayout(runtime_group)
+        runtime_layout.setSpacing(10)
 
         runtime_layout.addWidget(self.calibrate_button)
         runtime_layout.addWidget(self.start_button)
