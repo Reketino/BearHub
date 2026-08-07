@@ -57,6 +57,9 @@ class MainWindow(QMainWindow):
         
         self.main_layout = QVBoxLayout(central_widget)
         
+        self.main_layout.setSpacing(16)
+        self.main_layout.setContentsMargins(16, 16, 16, 16)
+        
     #-------- CREATE WIDGETS --------# 
             
     def create_widgets(self):
@@ -91,6 +94,7 @@ class MainWindow(QMainWindow):
             
     def create_layout(self):
         header_layout = QHBoxLayout()
+        header_layout.setSpacing(12)
 
         logo = QLabel()
         pixmap = QPixmap(
@@ -122,9 +126,13 @@ class MainWindow(QMainWindow):
         self.main_layout.addSpacing(12)
 
         content_layout = QHBoxLayout()
+        content_layout.setSpacing(12)
 
         left_layout = QVBoxLayout()
+        left_layout.setSpacing(12)
+        
         right_layout = QVBoxLayout()
+        right_layout.setSpacing(12)
 
         content_layout.addLayout(left_layout, 1)
         content_layout.addLayout(right_layout, 2)
@@ -141,11 +149,13 @@ class MainWindow(QMainWindow):
         left_layout.addStretch()
 
         profile_layout = QVBoxLayout(profile_group)
+        profile_layout.setSpacing(10)
 
         profile_layout.addWidget(self.profile_selector)
         profile_layout.addWidget(self.import_button)
 
         actions_layout = QVBoxLayout(actions_group)
+        actions_layout.setSpacing(10)
 
         actions_layout.addWidget(self.new_macro_button)
         actions_layout.addWidget(self.edit_macro_button)
@@ -153,6 +163,7 @@ class MainWindow(QMainWindow):
         actions_layout.addWidget(self.execute_button)
 
         runtime_layout = QVBoxLayout(runtime_group)
+        runtime_layout.setSpacing(10)
 
         runtime_layout.addWidget(self.calibrate_button)
         runtime_layout.addWidget(self.start_button)
