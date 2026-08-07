@@ -149,6 +149,7 @@ class MainWindow(QMainWindow):
         left_layout.addStretch()
 
         profile_layout = QVBoxLayout(profile_group)
+        profile_layout.setSpacing(10)
 
         profile_layout.addWidget(self.profile_selector)
         profile_layout.addWidget(self.import_button)
