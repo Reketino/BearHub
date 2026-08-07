@@ -132,6 +132,7 @@ class MainWindow(QMainWindow):
         left_layout.setSpacing(12)
         
         right_layout = QVBoxLayout()
+        right_layout.setSpacing(12)
 
         content_layout.addLayout(left_layout, 1)
         content_layout.addLayout(right_layout, 2)
