@@ -155,6 +155,7 @@ class MainWindow(QMainWindow):
         profile_layout.addWidget(self.import_button)
 
         actions_layout = QVBoxLayout(actions_group)
+        actions_layout.setSpacing(10)
 
         actions_layout.addWidget(self.new_macro_button)
         actions_layout.addWidget(self.edit_macro_button)
