@@ -11,7 +11,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QListWidget,
     QComboBox,
-    QGroupBox
+    QGroupBox,
+    QTextEdit,
 )
 
 from storage.profile_storage import (load_profiles)
@@ -84,7 +85,9 @@ class MainWindow(QMainWindow):
            
         self.macro_list = QListWidget()
              
-        self.details = QLabel("Select a macro")
+        self.details = QTextEdit()
+        self.details.setReadOnly(True)
+        self.details.setPlainText("Select a macro")
             
         self.execute_button = QPushButton("Execute")
             
@@ -160,7 +163,7 @@ class MainWindow(QMainWindow):
         actions_layout.addWidget(self.new_macro_button)
         actions_layout.addWidget(self.edit_macro_button)
         actions_layout.addWidget(self.delete_macro_button)
-        actions_layout.addWidget(self.execute_button)
+       
 
         runtime_layout = QVBoxLayout(runtime_group)
         runtime_layout.setSpacing(10)
@@ -171,6 +174,7 @@ class MainWindow(QMainWindow):
 
         right_layout.addWidget(self.macro_list)
         right_layout.addWidget(self.details)
+        right_layout.addWidget(self.execute_button)
         right_layout.addWidget(self.status)
         
     #-------- CONNECT SIGNALS --------#        

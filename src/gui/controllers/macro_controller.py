@@ -62,7 +62,7 @@ class MacroController:
             "Unbound"
         )
         
-        self.view.details.setText(
+        self.view.details.setPlainText(
             f"Name: {macro.name}\n\n"
             f"Value:\n{macro.value}\n\n"
             f"Key: {key_name}\n"
