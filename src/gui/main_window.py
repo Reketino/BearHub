@@ -94,6 +94,7 @@ class MainWindow(QMainWindow):
             
     def create_layout(self):
         header_layout = QHBoxLayout()
+        header_layout.setSpacing(12)
 
         logo = QLabel()
         pixmap = QPixmap(
