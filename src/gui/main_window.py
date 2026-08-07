@@ -11,7 +11,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QListWidget,
     QComboBox,
-    QGroupBox
+    QGroupBox,
+    QTextEdit,
 )
 
 from storage.profile_storage import (load_profiles)
@@ -84,7 +85,9 @@ class MainWindow(QMainWindow):
            
         self.macro_list = QListWidget()
              
-        self.details = QLabel("Select a macro")
+        self.details = QTextEdit()
+        self.details.setReadOnly(True)
+        self.details.setPlainText("Select a macro")
             
         self.execute_button = QPushButton("Execute")
             
