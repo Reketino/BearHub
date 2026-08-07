@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         actions_layout.addWidget(self.new_macro_button)
         actions_layout.addWidget(self.edit_macro_button)
         actions_layout.addWidget(self.delete_macro_button)
-        actions_layout.addWidget(self.execute_button)
+       
 
         runtime_layout = QVBoxLayout(runtime_group)
         runtime_layout.setSpacing(10)
@@ -174,6 +174,7 @@ class MainWindow(QMainWindow):
 
         right_layout.addWidget(self.macro_list)
         right_layout.addWidget(self.details)
+        right_layout.addWidget(self.execute_button)
         right_layout.addWidget(self.status)
         
     #-------- CONNECT SIGNALS --------#        
