@@ -57,6 +57,9 @@ class MainWindow(QMainWindow):
         
         self.main_layout = QVBoxLayout(central_widget)
         
+        self.main_layout.setSpacing(16)
+        self.main_layout.setContentsMargins(16, 16, 16, 16)
+        
     #-------- CREATE WIDGETS --------# 
             
     def create_widgets(self):
