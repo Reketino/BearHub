@@ -20,6 +20,10 @@ QTextEdit {
     padding: 8px;
 }
 
+QTextEdit:focus {
+    border: 1px solid #00b7f0
+}
+
 QLabel#title {
     font-size: 28px;
     font-weight: bold;
