@@ -20,6 +20,10 @@ QTextEdit {
     padding: 8px;
 }
 
+QTextEdit:focus {
+    border: 1px solid #00b7f0;
+}
+
 QLabel#title {
     font-size: 28px;
     font-weight: bold;
@@ -53,6 +57,21 @@ QComboBox QAbstractItemView {
     border: 1px solid #343a40;
     selection-background-color: #00aee8;
     selection-color: #ffffff;
+}
+
+QGroupBox {
+    border: 1px solid #343a40;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-weight: bold;
+    padding-top: 10px; 
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 4px;
+    color: #00b7f0;
 }
 
 QPushButton {

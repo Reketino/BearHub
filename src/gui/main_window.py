@@ -174,6 +174,9 @@ class MainWindow(QMainWindow):
 
         right_layout.addWidget(self.macro_list)
         right_layout.addWidget(self.details)
+        
+        right_layout.addStretch()
+        
         right_layout.addWidget(self.execute_button)
         right_layout.addWidget(self.status)
         
