@@ -4,13 +4,21 @@
             "id": "bearhub",
             "name": "BearHub",
             "created_at": "2026-07-31T09:43:02.880002",
-            "macro_count": 1,
+            "macro_count": 2,
             "macros": [
                 {
                     "name": "hotkey",
                     "value": "{}",
                     "macro_type": "TEXT",
                     "input_id": "399",
+                    "preset": "BearHub",
+                    "device": ""
+                },
+                {
+                    "name": "hotkey 2",
+                    "value": "ABC",
+                    "macro_type": "TEXT",
+                    "input_id": "400",
                     "preset": "BearHub",
                     "device": ""
                 }
