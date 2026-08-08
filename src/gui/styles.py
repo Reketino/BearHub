@@ -59,6 +59,21 @@ QComboBox QAbstractItemView {
     selection-color: #ffffff;
 }
 
+QGroupBox {
+    border: 1px solid #343a40;
+    border-radius: 8px;
+    margin-top: 12px;
+    font-weight: bold;
+    padding-top: 10px; 
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 4px;
+    color: #00b7f0;
+}
+
 QPushButton {
     background-color: #2a2f34;
     border: 1px solid #363c42;
