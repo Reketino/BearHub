@@ -21,7 +21,7 @@ QTextEdit {
 }
 
 QTextEdit:focus {
-    border: 1px solid #00b7f0
+    border: 1px solid #00b7f0;
 }
 
 QLabel#title {
