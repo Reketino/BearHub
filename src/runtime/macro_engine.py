@@ -1,6 +1,7 @@
+import sys
+
 from models.macro import Macro
 from runtime.macro_executor import MacroExecutor
-from runtime.macro_listener import MacroListener
 from constants.g_keys import G_KEY_TO_INPUT_ID
 
 class MacroEngine:
@@ -9,10 +10,8 @@ class MacroEngine:
         self.running = False
         
         self.executor = MacroExecutor()
-        self.listener = MacroListener()
-        self.listener.set_callback(
-            self.on_key_pressed
-        )
+       
+       
        
     def load_profile(self, macros: list[Macro]):
         self.profile = macros
@@ -41,7 +40,6 @@ class MacroEngine:
             return
         
         self.running = True
-        self.listener.start()
         
         print("Macro engine started.")
         
@@ -50,6 +48,5 @@ class MacroEngine:
             return
         
         self.running = False
-        self.listener.stop()
         
         print("Macro engine stopped.")
