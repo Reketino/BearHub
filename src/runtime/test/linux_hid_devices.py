@@ -1,52 +1,70 @@
 import hid
+from threading import Thread
 
 
-LOGITECH_VENDOR_ID = 0x046D
-LIGHTSPEED_RECEIVER_PID = 0xC547
+PATHS = [
+    b"1-4:1.2",
+    b"1-9.1:1.2",
+]
 
-G_KEY_USAGE_PAGE = 0xFF00
-G_KEY_USAGE = 0x02
+
+def listen(path, index):
+    device = hid.device()
+
+    try:
+        device.open_path(path)
+        device.set_nonblocking(True)
+
+        print(f"[DEVICE {index}] Opened: {path}")
+
+        while True:
+            report = device.read(64)
+
+            if not report:
+                continue
+
+            print(
+                f"[DEVICE {index}] {report}"
+            )
+
+    except Exception as error:
+        print(
+            f"[DEVICE {index}] ERROR: {error}"
+        )
+
+    finally:
+        try:
+            device.close()
+        except Exception:
+            pass
+
+        print(
+            f"[DEVICE {index}] Closed."
+        )
 
 
-def main():
-    devices = hid.enumerate()
+threads = []
 
-    print("=" * 70)
-    print("LOGITECH LIGHTSPEED HID DEVICES")
-    print("=" * 70)
-
-    found = 0
-
-    for device in devices:
-        if (
-            device["vendor_id"] != LOGITECH_VENDOR_ID
-            or device["product_id"] != LIGHTSPEED_RECEIVER_PID
-        ):
-            continue
-
-        found += 1
-
-    print()
-    print(f"DEVICE {found}")
-    print("-" * 70)
-    print(f"Path        : {device['path']}")
-    print(f"Interface   : {device.get('interface_number')}")
-    print(f"Usage Page  : {device.get('usage_page')}")
-    print(f"Usage       : {device.get('usage')}")
-    print(f"Product     : {device.get('product_string')}")
-
-    is_g_key = (
-        device.get("usage_page") == G_KEY_USAGE_PAGE
-        and device.get("usage") == G_KEY_USAGE
+for index, path in enumerate(PATHS):
+    thread = Thread(
+        target=listen,
+        args=(path, index),
+        daemon=True,
     )
 
-    print(f"G-key       : {is_g_key}")
-
-    print()
-    print("=" * 70)
-    print(f"Found {found} Logitech receiver HID interfaces.")
-    print("=" * 70)
+    threads.append(thread)
+    thread.start()
 
 
-if __name__ == "__main__":
-    main()
+print()
+print("Both Logitech interfaces are listening.")
+print("Press G1-G9.")
+print("Press Ctrl+C to stop.")
+print()
+
+try:
+    while True:
+        pass
+
+except KeyboardInterrupt:
+    print("\nStopping...")
