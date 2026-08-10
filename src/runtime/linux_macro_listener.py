@@ -1,9 +1,11 @@
 
-import struct
+from pathlib import Path
 from threading import Thread
 
+from evdev import import InputDevice, ecodes, list_device
 
-LINUX_INPUT_DEVICE = "/dev/input/event3"
+LOGITECH_VENDOR_ID = "046d"
+LOGITECH_PRODUCT_ID = "c547"
 
 EV_KEY = 1
 
@@ -21,8 +23,7 @@ G_KEY_MAP = {
 
 
 class LinuxMacroListener:
-    def __init__(self, device_path=LINUX_INPUT_DEVICE):
-        self.device_path = device_path
+    def __init__(self):
         self.running = False
         self.thread = None
         self.callback = None
