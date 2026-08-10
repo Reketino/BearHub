@@ -19,7 +19,11 @@ class MacroEngine:
         if sys.platform.startswith("linux"):
             self.listener = LinuxMacroListener()  
         else:
-            self.listener = MacroListener
+            self.listener = MacroListener()
+            
+        self.listener.set_callback(
+            self.on_key_pressed
+        )
             
     def load_profile(self, macros: list[Macro]):
         self.profile = macros
