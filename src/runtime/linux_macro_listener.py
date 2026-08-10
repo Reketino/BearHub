@@ -3,10 +3,8 @@ from threading import Thread
 
 from evdev import InputDevice, ecodes, list_devices
 
-
 LOGITECH_VENDOR_ID = 0x046D
 LOGITECH_PRODUCT_ID = 0xC547
-
 
 G_KEY_CODES = {
     ecodes.KEY_F15: "G2",
@@ -18,7 +16,6 @@ G_KEY_CODES = {
     ecodes.KEY_F21: "G8",
     ecodes.KEY_F22: "G9",
 }
-
 
 class LinuxMacroListener:
     def __init__(self):
