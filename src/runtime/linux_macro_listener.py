@@ -1,4 +1,4 @@
-import os
+
 import struct
 from threading import Thread
 
@@ -8,15 +8,15 @@ LINUX_INPUT_DEVICE = "/dev/input/event3"
 EV_KEY = 1
 
 G_KEY_MAP = {
-    183: "G1",  # F13
-    184: "G2",  # F14
-    185: "G3",  # F15
-    186: "G4",  # F16
-    187: "G5",  # F17
-    188: "G6",  # F18
-    189: "G7",  # F19
-    190: "G8",  # F20
-    191: "G9",  # F21
+    183: "G1",  
+    184: "G2",  
+    185: "G3",  
+    186: "G4",  
+    187: "G5",  
+    188: "G6", 
+    189: "G7",  
+    190: "G8",  
+    191: "G9",  
 }
 
 
