@@ -10,9 +10,12 @@ class MacroEngine:
         self.running = False
         
         self.executor = MacroExecutor()
-       
-       
-       
+        
+        if sys.platform.startswith("linux"):
+            self.listener = LinuxMacroListener()  
+        else:
+            self.listener = MacroListener
+            
     def load_profile(self, macros: list[Macro]):
         self.profile = macros
         
