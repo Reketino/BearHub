@@ -63,4 +63,6 @@ class MacroEngine:
         
         self.running = False
         
+        self.listener.stop()
+        
         print("Macro engine stopped.")
