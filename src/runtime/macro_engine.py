@@ -4,6 +4,11 @@ from models.macro import Macro
 from runtime.macro_executor import MacroExecutor
 from constants.g_keys import G_KEY_TO_INPUT_ID
 
+if sys.platform.startswith("linux"):
+    from runtime.linux_macro_listener import LinuxMacroListener
+else:
+    from runtime.macro_listener import MacroListener
+
 class MacroEngine:
     def __init__(self):
         self.profile: list[Macro] = []
