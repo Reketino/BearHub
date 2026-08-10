@@ -53,6 +53,8 @@ class MacroEngine:
         
         self.running = True
         
+        self.listener.start()
+        
         print("Macro engine started.")
         
     def stop(self):
