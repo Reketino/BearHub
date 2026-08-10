@@ -1,35 +1,59 @@
-
-from pathlib import Path
+from select import select
 from threading import Thread
 
-from evdev import import InputDevice, ecodes, list_device
+from evdev import InputDevice, ecodes, list_devices
 
-LOGITECH_VENDOR_ID = "046d"
-LOGITECH_PRODUCT_ID = "c547"
 
-EV_KEY = 1
+LOGITECH_VENDOR_ID = 0x046D
+LOGITECH_PRODUCT_ID = 0xC547
 
-G_KEY_MAP = {
-    183: "G1",  
-    184: "G2",  
-    185: "G3",  
-    186: "G4",  
-    187: "G5",  
-    188: "G6", 
-    189: "G7",  
-    190: "G8",  
-    191: "G9",  
+
+G_KEY_CODES = {
+    ecodes.KEY_F15: "G2",
+    ecodes.KEY_F16: "G3",
+    ecodes.KEY_F17: "G4",
+    ecodes.KEY_F18: "G5",
+    ecodes.KEY_F19: "G6",
+    ecodes.KEY_F20: "G7",
+    ecodes.KEY_F21: "G8",
+    ecodes.KEY_F22: "G9",
 }
 
 
 class LinuxMacroListener:
     def __init__(self):
         self.running = False
-        self.thread = None
         self.callback = None
+        self.thread = None
+        self.devices = []
 
     def set_callback(self, callback):
         self.callback = callback
+
+    def find_devices(self):
+        devices = []
+
+        for path in list_devices():
+            try:
+                device = InputDevice(path)
+            except Exception:
+                continue
+
+            if device.info.vendor != LOGITECH_VENDOR_ID:
+                device.close()
+                continue
+
+            if device.info.product != LOGITECH_PRODUCT_ID:
+                device.close()
+                continue
+
+            if "Keyboard" not in device.name:
+                device.close()
+                continue
+
+            devices.append(device)
+
+        return devices
 
     def start(self):
         if self.running:
@@ -47,64 +71,68 @@ class LinuxMacroListener:
         print("Linux G-key listener started.")
 
     def listen(self):
+        devices = self.find_devices()
+
+        if not devices:
+            print(
+                "No Logitech USB Receiver Keyboard found."
+            )
+
+            self.running = False
+            return
+
+        self.devices = devices
+
+        for device in self.devices:
+            print(
+                f"Listening for G-keys on "
+                f"{device.path} - {device.name}"
+            )
+
         try:
-            with open(self.device_path, "rb") as device:
-                print(
-                    f"Listening for G-keys on "
-                    f"{self.device_path}"
+            while self.running:
+                readable, _, _ = select(
+                    self.devices,
+                    [],
+                    [],
+                    0.5,
                 )
 
-                while self.running:
-                    event = device.read(24)
+                for device in readable:
+                    try:
+                        events = device.read()
 
-                    if len(event) != 24:
+                    except OSError as error:
+                        if self.running:
+                            print(
+                                f"Input error on "
+                                f"{device.path}: {error}"
+                            )
+
                         continue
 
-                    _, _, event_type, code, value = struct.unpack(
-                        "llHHI",
-                        event,
-                    )
-
-                    if event_type != EV_KEY:
-                        continue
-
-                    if value != 1:
-                        continue
-
-                    g_key = G_KEY_MAP.get(code)
-
-                    if g_key is None:
-                        continue
-
-                    print(f"Pressed {g_key}")
-
-                    if self.callback:
-                        self.callback(g_key)
-
-        except PermissionError:
-            print(
-                f"Permission denied: {self.device_path}"
-            )
-            print(
-                "Run the test with sudo or configure "
-                "udev permissions."
-            )
-
-        except FileNotFoundError:
-            print(
-                f"Input device not found: "
-                f"{self.device_path}"
-            )
-
-        except Exception as error:
-            if self.running:
-                print(
-                    f"Linux input error: {error}"
-                )
+                    for event in events:
+                        self.handle_event(event)
 
         finally:
-            self.running = False
-            print("Linux G-key listener stopped.")
+            self.close_devices()
+
+    def handle_event(self, event):
+        if event.type != ecodes.EV_KEY:
+            return
+
+        if event.value != 1:
+            return
+
+        key = G_KEY_CODES.get(event.code)
+
+        if key is None:
+            return
+
+        print(f"Pressed {key}")
+
+        if self.callback:
+            self.callback(key)
 
     def stop(self):
         if not self.running:
@@ -118,4 +146,17 @@ class LinuxMacroListener:
         ):
             self.thread.join(timeout=1)
 
+        self.close_devices()
+
         self.thread = None
+
+        print("Linux G-key listener stopped.")
+
+    def close_devices(self):
+        for device in self.devices:
+            try:
+                device.close()
+            except Exception:
+                pass
+
+        self.devices = []

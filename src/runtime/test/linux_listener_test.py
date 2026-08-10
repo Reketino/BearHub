@@ -1,26 +1,63 @@
-import time
+from select import select
 
-from src.runtime.linux_macro_listener import LinuxMacroListener
-
-
-def on_key_pressed(key):
-    print(f"CALLBACK: {key}")
+from evdev import InputDevice
 
 
-listener = LinuxMacroListener()
+PATHS = [
+    "/dev/input/event3",
+    "/dev/input/event5",
+]
 
-listener.set_callback(
-    on_key_pressed
-)
 
-listener.start()
+devices = []
+
+for path in PATHS:
+    try:
+        device = InputDevice(path)
+        devices.append(device)
+
+        print(
+            f"Opened {path}: "
+            f"{device.name}"
+        )
+
+    except Exception as error:
+        print(
+            f"Could not open {path}: "
+            f"{error}"
+        )
+
+
+print()
+print("Listening for ALL events.")
+print("Press G1-G9.")
+print("Press Ctrl+C to stop.")
+print()
+
 
 try:
     while True:
-        time.sleep(1)
+        readable, _, _ = select(
+            devices,
+            [],
+            [],
+            1.0,
+        )
+
+        for device in readable:
+            for event in device.read():
+                print(
+                    f"[{device.path}] "
+                    f"type={event.type} "
+                    f"code={event.code} "
+                    f"value={event.value}"
+                )
 
 except KeyboardInterrupt:
     print("\nStopping...")
 
 finally:
-    listener.stop()
+    for device in devices:
+        device.close()
+
+    print("Closed.")
