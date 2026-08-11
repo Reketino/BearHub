@@ -15,3 +15,7 @@ print()
 print("Press G1-G9.")
 print("Press Ctrl + C to stop.")
 print()
+
+try:
+    while True:
+        pass
