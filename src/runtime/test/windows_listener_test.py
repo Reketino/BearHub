@@ -23,3 +23,6 @@ try:
 except KeyboardInterrupt:
     print()
     print("Stopping...")
+    
+finally:
+    listener.stop()
