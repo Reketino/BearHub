@@ -7,7 +7,7 @@ from constants.g_keys import G_KEY_TO_INPUT_ID
 if sys.platform.startswith("linux"):
     from runtime.linux_macro_listener import LinuxMacroListener
 else:
-    from runtime.macro_listener import MacroListener
+    from runtime.windows_macro_listener import WindowsMacroListener
 
 class MacroEngine:
     def __init__(self):
@@ -19,7 +19,7 @@ class MacroEngine:
         if sys.platform.startswith("linux"):
             self.listener = LinuxMacroListener()  
         else:
-            self.listener = MacroListener()
+            self.listener = WindowsMacroListener()
             
         self.listener.set_callback(
             self.on_key_pressed
