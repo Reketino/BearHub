@@ -19,3 +19,7 @@ print()
 try:
     while True:
         pass
+    
+except KeyboardInterrupt:
+    print()
+    print("Stopping...")
