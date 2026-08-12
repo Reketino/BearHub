@@ -19,3 +19,21 @@ def on_key_pressed(event):
         print(
             f"Keyboard event: {key.upper()} -> {KEYS[key]}"
         )
+        
+print("Windows keyboard listener started.")
+print()
+print("Listening for F13-F21.")
+print()
+print("G1 -> F13")
+print("G2 -> F14")
+print("G3 -> F15")
+print("G4 -> F16")
+print("G5 -> F17")
+print("G6 -> F18")
+print("G7 -> F19")
+print("G8 -> F20")
+print("G9 -> F21")
+print()
+print("Press CTRL+C to stop")
+print()
+    
