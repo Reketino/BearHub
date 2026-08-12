@@ -36,4 +36,6 @@ print("G9 -> F21")
 print()
 print("Press CTRL+C to stop")
 print()
+
+keyboard.hook(on_key_pressed)
     
