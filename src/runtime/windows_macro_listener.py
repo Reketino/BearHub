@@ -2,8 +2,8 @@ import hid
 
 from threading import Thread
 
-from src.runtime.hid_parser import parse_report
-from src.runtime.hid_device import find_device
+from runtime.hid_parser import parse_report
+from runtime.hid_device import find_device
 
 class WindowsMacroListener:
     def __init__(self):
