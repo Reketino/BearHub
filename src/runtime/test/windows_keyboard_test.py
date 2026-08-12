@@ -11,3 +11,11 @@ KEYS = {
     "f20": "G8",
     "f21": "G9",
 }
+
+def on_key_pressed(event):
+    key = event.name.lower()
+    
+    if key in KEYS:
+        print(
+            f"Keyboard event: {key.upper()} -> {KEYS[key]}"
+        )
