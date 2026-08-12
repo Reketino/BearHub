@@ -1,4 +1,7 @@
+import time
+
 import keyboard
+
 
 KEYS = {
     "f13": "G1",
@@ -12,37 +15,53 @@ KEYS = {
     "f21": "G9",
 }
 
-def on_key_pressed(event):
+
+last_event_time = None
+
+
+def on_key_event(event):
+    global last_event_time
+
     key = event.name.lower()
-    
-    if key in KEYS:
-        print(
-            f"Keyboard event: {key.upper()} -> {KEYS[key]}"
-        )
-        
-print("Windows keyboard listener started.")
+
+    if key not in KEYS:
+        return
+
+    now = time.perf_counter()
+
+    if last_event_time is None:
+        delta_ms = 0.0
+    else:
+        delta_ms = (now - last_event_time) * 1000
+
+    last_event_time = now
+
+    print(
+        f"EVENT "
+        f"type={event.event_type:<3} "
+        f"key={key.upper():<3} "
+        f"scan_code={event.scan_code:<3} "
+        f"delta={delta_ms:>7.2f} ms"
+    )
+
+
+print("Windows keyboard diagnostic started.")
 print()
-print("Listening for F13-F21.")
-print()
-print("G1 -> F13")
-print("G2 -> F14")
-print("G3 -> F15")
-print("G4 -> F16")
-print("G5 -> F17")
-print("G6 -> F18")
-print("G7 -> F19")
-print("G8 -> F20")
-print("G9 -> F21")
-print()
-print("Press CTRL+C to stop")
+print("Press G2 once.")
+print("Then press Ctrl+C to stop.")
 print()
 
-keyboard.hook(on_key_pressed)
+
+keyboard.hook(on_key_event)
+
 
 try:
     keyboard.wait()
-    
+
 except KeyboardInterrupt:
     print()
     print("Stopping...")
-    
+
+finally:
+    keyboard.unhook_all()
+    print("Windows keyboard diagnostic stopped.")
