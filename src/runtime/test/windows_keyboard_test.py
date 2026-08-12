@@ -38,4 +38,11 @@ print("Press CTRL+C to stop")
 print()
 
 keyboard.hook(on_key_pressed)
+
+try:
+    keyboard.wait()
+    
+except KeyboardInterrupt:
+    print()
+    print("Stopping...")
     
