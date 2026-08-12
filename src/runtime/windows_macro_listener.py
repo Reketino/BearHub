@@ -1,99 +1,65 @@
-import hid
+import keyboard
 
-from threading import Thread
-
-from runtime.hid_parser import parse_report
-from runtime.hid_device import find_device
 
 class WindowsMacroListener:
+    KEY_TO_G_KEY = {
+        "f13": "G1",
+        "f14": "G2",
+        "f15": "G3",
+        "f16": "G4",
+        "f17": "G5",
+        "f18": "G6",
+        "f19": "G7",
+        "f20": "G8",
+        "f21": "G9",
+    }
+
     def __init__(self):
-        self.running = False
         self.callback = None
-        self.thread = None
-        self.last_key = None
-        self.device = None
+        self.running = False
+        self.hook = None
 
     def set_callback(self, callback):
         self.callback = callback
+
+    def _on_key_event(self, event):
+        if not self.running:
+            return
+        
+        print(
+            f"Keyboard event: "
+            f"type={event.event_type} "
+            f"key={event.name} "
+            f"scan_code={event.scan_code}"
+        )
+
+        if event.event_type != "down":
+            return
+
+        key = event.name.lower()
+
+        g_key = self.KEY_TO_G_KEY.get(key)
+
+        if g_key is None:
+            return
+
+        print(f"Pressed {g_key}")
+
+        if self.callback is not None:
+            self.callback(g_key)
 
     def start(self):
         if self.running:
             return
 
         self.running = True
-        self.last_key = None
 
-        self.thread = Thread(
-            target=self.listen,
-            daemon=True,
+        self.hook = keyboard.hook(
+            self._on_key_event
         )
 
-        self.thread.start()
-
         print("Windows G-key listener started.")
-        print("Listening for Logitech G-keys.")
-
-    def listen(self):
-        print("Listener thread started.")
-
-        try:
-            path = find_device()
-
-            if path is None:
-                raise RuntimeError(
-                    "No compatible Logitech HID device found."
-                )
-
-            print(f"Opening Logitech HID device: {path}")
-
-            self.device = hid.device()
-            self.device.open_path(path)
-
-            print("HID device opened.")
-
-            while self.running:
-                report = self.device.read(64)
-
-                if not self.running:
-                    break
-
-                if not report:
-                    continue
-
-                print(f"Report: {report}")
-
-                key = parse_report(report)
-
-                if not key:
-                    self.last_key = None
-                    continue
-
-                if key == self.last_key:
-                    continue
-
-                self.last_key = key
-
-                print(f"Pressed {key}")
-
-                if self.callback:
-                    self.callback(key)
-
-        except Exception as error:
-            if self.running:
-                print(f"HID Error: {error}")
-
-        finally:
-            if self.device is not None:
-                try:
-                    self.device.close()
-                except Exception:
-                    pass
-
-                self.device = None
-
-            self.running = False
-
-            print("Windows G-key listener stopped.")
+        print("Listening for G1-G9.")
 
     def stop(self):
         if not self.running:
@@ -101,10 +67,8 @@ class WindowsMacroListener:
 
         self.running = False
 
-        if (
-            self.thread is not None
-            and self.thread.is_alive()
-        ):
-            self.thread.join(timeout=1)
+        if self.hook is not None:
+            keyboard.unhook(self.hook)
+            self.hook = None
 
-        self.thread = None
+        print("Windows G-key listener stopped.")
