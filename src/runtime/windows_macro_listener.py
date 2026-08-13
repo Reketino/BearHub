@@ -97,3 +97,15 @@ class WindowsMacroListener:
         print(
             "Windows G-key listener stopped."
         )
+        
+    def _close_device(self):
+        if self.device is None:
+            return
+        
+        try:
+            self.device.close()
+            
+        except Exception:
+            pass
+        
+        self.device = None
