@@ -1,9 +1,10 @@
 import time
 from threading import Thread
 
+import hid
+
 from runtime.hid_device import find_device
 from runtime.hid_parser import parse_report
-
 
 class WindowsMacroListener:
 
