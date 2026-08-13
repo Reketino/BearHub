@@ -20,9 +20,10 @@ class WindowsMacroListener:
             return
 
         self.running = True
-
-        self.hook = keyboard.hook(
-            self._on_key_event
+        
+        self.thread = Thread(
+            target=self.listen,
+            daemon=True,
         )
 
         print("Windows G-key listener started.")
