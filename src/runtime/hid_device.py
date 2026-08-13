@@ -6,8 +6,9 @@ G_KEY_USAGE_PAGE = 65280
 G_KEY_USAGE = 2
 
 def find_device():
+    devices = hid.enumrate()
     
-    for device in hid.enumerate():
+    for device in devices:
         if ( 
             device["vendor_id"] == LOGITECH_VENDOR_ID
             and device["product_id"] == LIGHTSPEED_RECEIVER_PID
