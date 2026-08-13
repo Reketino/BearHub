@@ -25,6 +25,8 @@ class WindowsMacroListener:
             target=self.listen,
             daemon=True,
         )
+        
+        self.thread.start()
 
         print("Windows G-key listener started.")
         print("Listening for G1-G9.")
