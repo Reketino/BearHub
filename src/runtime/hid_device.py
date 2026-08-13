@@ -7,7 +7,7 @@ G_KEY_USAGE_PAGE = 65280
 G_KEY_USAGE = 2
 
 def find_device():
-    devices = hid.enumrate()
+    devices = hid.enumerate()
     
     for device in devices:
         if ( 
