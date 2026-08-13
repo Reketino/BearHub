@@ -91,4 +91,9 @@ class WindowsMacroListener:
             return
 
         self.running = False
-        print("Windows G-key listener stopped.")
+        
+        self._close_device()
+        
+        print(
+            "Windows G-key listener stopped."
+        )
