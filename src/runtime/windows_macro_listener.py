@@ -91,9 +91,4 @@ class WindowsMacroListener:
             return
 
         self.running = False
-
-        if self.hook is not None:
-            keyboard.unhook(self.hook)
-            self.hook = None
-
         print("Windows G-key listener stopped.")
