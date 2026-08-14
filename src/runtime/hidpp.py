@@ -14,3 +14,12 @@ HIDPP_WRITE_FUNCTION = 0x10
 
 class HidppError(Exception):
     """ Base exception for Logitech HID++ communication"""
+    
+class HIDppDevice:
+    def __init__(
+        self,
+        device: hid.device,
+        device_id: int = HIDPP_DEVICE_ID,
+        ):
+        self.device = device
+        self.device_id = device_id
