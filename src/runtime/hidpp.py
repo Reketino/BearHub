@@ -23,3 +23,15 @@ class HIDppDevice:
         ):
         self.device = device
         self.device_id = device_id
+        
+    def build_long_request(
+        self,
+        feature_index: int,
+        function_id: int,
+        data: bytes = b"",
+    ) -> list [int]:
+        
+        if len(data) > 16:
+            raise ValueError(
+                "HID++ long request data cannot exceed 16 bytes if you were curious"
+            )
