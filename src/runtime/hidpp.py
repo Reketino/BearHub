@@ -35,3 +35,5 @@ class HIDppDevice:
             raise ValueError(
                 "HID++ long request data cannot exceed 16 bytes if you were curious"
             )
+            
+        report = bytearray(20)
