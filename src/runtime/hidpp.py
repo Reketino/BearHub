@@ -37,3 +37,8 @@ class HIDppDevice:
             )
             
         report = bytearray(20)
+        
+        report[0] = HIDPP_LONG_REPORT_ID
+        report[1] = self.device_id
+        report[2] = feature_index
+        report[3] = function_id
