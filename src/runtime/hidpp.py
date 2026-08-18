@@ -42,3 +42,7 @@ class HIDppDevice:
         report[1] = self.device_id
         report[2] = feature_index
         report[3] = function_id
+        
+        report[4:4 + len(data)] = data
+        
+        return list(report)
