@@ -46,3 +46,11 @@ class HIDppDevice:
         report[4:4 + len(data)] = data
         
         return list(report)
+    
+    def send_request(
+        self,
+        feature_index: int,
+        function_id: int,
+        data: bytes = b"",
+        timeout: float = 1.0,
+    ) -> list[int]:
