@@ -54,3 +54,9 @@ class HIDppDevice:
         data: bytes = b"",
         timeout: float = 1.0,
     ) -> list[int]:
+        
+        request = self.build_long_request(
+            feature_index=feature_index,
+            function_id=function_id,
+            data=data,
+        )
