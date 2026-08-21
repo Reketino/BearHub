@@ -60,3 +60,9 @@ class HIDppDevice:
             function_id=function_id,
             data=data,
         )
+        
+        written = self.build_long_request(
+            feature_index=feature_index,
+            function_id=function_id,
+            data=data,
+        )
