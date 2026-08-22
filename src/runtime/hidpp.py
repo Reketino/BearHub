@@ -61,8 +61,9 @@ class HIDppDevice:
             data=data,
         )
         
-        written = self.build_long_request(
-            feature_index=feature_index,
-            function_id=function_id,
-            data=data,
-        )
+        written = self.device.write(request)
+        
+        if written <= 0:
+            raise HidppError(
+                "Failed to write HID++ request"
+            )
