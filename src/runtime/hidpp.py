@@ -13,7 +13,10 @@ HIDPP_READ_FUNCTION = 0x00
 HIDPP_WRITE_FUNCTION = 0x10
 
 class HidppError(Exception):
-    """ Base exception for Logitech HID++ communication"""
+    """Base exception for Logitech HID++ communication."""
+    
+class HidppTimeoutError(HidppError):
+    """Raised when a HID++ response is not received in time."""
     
 class HIDppDevice:
     def __init__(
@@ -67,3 +70,30 @@ class HIDppDevice:
             raise HidppError(
                 "Failed to write HID++ request"
             )
+            
+        deadline = time.monotonic() + timeout
+        
+        while time.monotonic() <deadline:
+            report = self.device.read(64)
+            
+            if not report:
+                time.sleep(0.005)
+                continue
+            
+            if len(report) < 4:
+                continue
+            
+            if report[0] != HIDPP_LONG_REPORT_ID:
+                continue
+            
+            if report[1] != self.device_id:
+                continue
+            
+            if report[2] != feature_index:
+                continue
+            
+            return report
+        
+        raise HidppTimeoutError(
+            "Timed out waiting for HID++ response."
+        )
