@@ -97,3 +97,8 @@ class HIDppDevice:
         raise HidppTimeoutError(
             "Timed out waiting for HID++ response."
         )
+        
+    def get_feature(
+        self,
+        feature_index: int
+    ) -> list[int]:
