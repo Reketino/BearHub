@@ -102,3 +102,8 @@ class HIDppDevice:
         self,
         feature_index: int
     ) -> list[int]:
+        
+        return self.send_request(
+            feature_index=feature_index,
+            function_id=HIDPP_READ_FUNCTION,
+        )
