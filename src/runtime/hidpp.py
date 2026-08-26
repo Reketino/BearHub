@@ -107,3 +107,11 @@ class HIDppDevice:
             feature_index=feature_index,
             function_id=HIDPP_READ_FUNCTION,
         )
+        
+    def set_feature(
+        self,
+        feature_index: int,
+        data: bytes,
+    ) -> list[int]:
+        
+        
