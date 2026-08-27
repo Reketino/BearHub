@@ -114,4 +114,8 @@ class HIDppDevice:
         data: bytes,
     ) -> list[int]:
         
-        
+        return self.send_request(
+            feature_index=feature_index,
+            function_id=HIDPP_WRITE_FUNCTION,
+            data=data,
+        )
