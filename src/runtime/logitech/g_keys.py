@@ -16,4 +16,4 @@ class LogitechGKeys:
         feature_index: int = GKEY_FEATURE_INDEX
     ):
         self.hidpp = hidpp
-        
+        self.feature_index = feature_index
