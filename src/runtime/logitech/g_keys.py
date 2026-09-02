@@ -17,3 +17,15 @@ class LogitechGKeys:
     ):
         self.hidpp = hidpp
         self.feature_index = feature_index
+        
+    def read_diversion(self) -> bool:
+        report = self.hidpp.get_feature(
+            self.feature_index
+        )
+        
+        if len(report) < 5:
+            raise RuntimeError(
+                "Invalid GKEY HID++ response."
+            )
+            
+        return report[4] != 0
