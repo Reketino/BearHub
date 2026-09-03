@@ -29,3 +29,9 @@ class LogitechGKeys:
             )
             
         return report[4] != 0
+    
+    def enable_diversion(self) -> None:
+        self.hidpp.set_feature(
+            self.feature_index,
+            GKEY_DIVERT_ENABLED,
+        )
