@@ -41,3 +41,8 @@ class LogitechGKeys:
             self.feature_index,
             GKEY_DIVERT_ENABLED,
         )
+        
+    def handle_notification(
+        self,
+        report: list[int],
+    ) -> int | None:
