@@ -46,3 +46,6 @@ class LogitechGKeys:
         self,
         report: list[int],
     ) -> int | None:
+        
+        if len(report) < 5:
+            return None
