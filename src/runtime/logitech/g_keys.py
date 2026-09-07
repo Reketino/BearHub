@@ -49,3 +49,6 @@ class LogitechGKeys:
         
         if len(report) < 5:
             return None
+        
+        if report[0] != 0x11:
+            return None
