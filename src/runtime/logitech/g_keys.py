@@ -52,3 +52,6 @@ class LogitechGKeys:
         
         if report[0] != 0x11:
             return None
+        
+        if report[1] != self.hidpp.device_id:
+            return None
