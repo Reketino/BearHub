@@ -55,3 +55,7 @@ class LogitechGKeys:
         
         if report[1] != self.hidpp.device_id:
             return None
+        
+        if report[2] != self.feature_index:
+            return None
+        
