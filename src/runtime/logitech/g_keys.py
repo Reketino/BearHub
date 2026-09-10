@@ -59,3 +59,5 @@ class LogitechGKeys:
         if report[2] != self.feature_index:
             return None
         
+        if report[3] != 0x00:
+            return None
