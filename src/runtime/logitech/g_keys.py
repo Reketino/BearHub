@@ -61,3 +61,5 @@ class LogitechGKeys:
         
         if report[3] != 0x00:
             return None
+        
+        key_code = report[4]
