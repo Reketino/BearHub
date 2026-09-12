@@ -63,3 +63,6 @@ class LogitechGKeys:
             return None
         
         key_code = report[4]
+        
+        if key_code == 0:
+            return None
