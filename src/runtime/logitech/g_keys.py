@@ -66,3 +66,5 @@ class LogitechGKeys:
         
         if key_code == 0:
             return None
+        
+        return key_code
