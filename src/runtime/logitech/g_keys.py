@@ -39,7 +39,7 @@ class LogitechGKeys:
     def disable_diversion(self) -> None:
         self.hidpp.set_feature(
             self.feature_index,
-            GKEY_DIVERT_ENABLED,
+            GKEY_DIVERT_DISABLED,
         )
         
     def handle_notification(

@@ -2,7 +2,7 @@ import time
 
 import hid
 
-HIDPP_SHORT_REPORT_ID = 0x10
+
 HIDPP_LONG_REPORT_ID = 0x11
 
 GKEY_FEATURE_ID = 0x8010
@@ -10,46 +10,50 @@ GKEY_FEATURE_ID = 0x8010
 HIDPP_DEVICE_ID = 0x01
 
 HIDPP_READ_FUNCTION = 0x00
-HIDPP_WRITE_FUNCTION = 0x10
+HIDPP_WRITE_FUNCTION = 0x20
+
 
 class HidppError(Exception):
     """Base exception for Logitech HID++ communication."""
-    
+
+
 class HidppTimeoutError(HidppError):
     """Raised when a HID++ response is not received in time."""
-    
-class HIDppDevice:
+
+
+class HidppDevice:
+
     def __init__(
         self,
         device: hid.device,
         device_id: int = HIDPP_DEVICE_ID,
-        ):
+    ):
         self.device = device
         self.device_id = device_id
-        
+
     def build_long_request(
         self,
         feature_index: int,
         function_id: int,
         data: bytes = b"",
-    ) -> list [int]:
-        
+    ) -> list[int]:
+
         if len(data) > 16:
             raise ValueError(
-                "HID++ long request data cannot exceed 16 bytes if you were curious"
+                "HID++ long request data cannot exceed 16 bytes."
             )
-            
+
         report = bytearray(20)
-        
+
         report[0] = HIDPP_LONG_REPORT_ID
         report[1] = self.device_id
         report[2] = feature_index
         report[3] = function_id
-        
+
         report[4:4 + len(data)] = data
-        
+
         return list(report)
-    
+
     def send_request(
         self,
         feature_index: int,
@@ -57,63 +61,64 @@ class HIDppDevice:
         data: bytes = b"",
         timeout: float = 1.0,
     ) -> list[int]:
-        
+
         request = self.build_long_request(
             feature_index=feature_index,
             function_id=function_id,
             data=data,
         )
-        
+
         written = self.device.write(request)
-        
+
         if written <= 0:
             raise HidppError(
-                "Failed to write HID++ request"
+                "Failed to write HID++ request."
             )
-            
+
         deadline = time.monotonic() + timeout
-        
-        while time.monotonic() <deadline:
+
+        while time.monotonic() < deadline:
+
             report = self.device.read(64)
-            
+
             if not report:
                 time.sleep(0.005)
                 continue
-            
+
             if len(report) < 4:
                 continue
-            
+
             if report[0] != HIDPP_LONG_REPORT_ID:
                 continue
-            
+
             if report[1] != self.device_id:
                 continue
-            
+
             if report[2] != feature_index:
                 continue
-            
+
             return report
-        
+
         raise HidppTimeoutError(
             "Timed out waiting for HID++ response."
         )
-        
+
     def get_feature(
         self,
-        feature_index: int
+        feature_index: int,
     ) -> list[int]:
-        
+
         return self.send_request(
             feature_index=feature_index,
             function_id=HIDPP_READ_FUNCTION,
         )
-        
+
     def set_feature(
         self,
         feature_index: int,
         data: bytes,
     ) -> list[int]:
-        
+
         return self.send_request(
             feature_index=feature_index,
             function_id=HIDPP_WRITE_FUNCTION,
