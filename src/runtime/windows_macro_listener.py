@@ -58,6 +58,10 @@ class WindowsMacroListener:
                 self.device
             )
             
+            self.g_keys = LogitechGKeys(
+                self.hidpp
+            )
+            
             
 
     def stop(self):
