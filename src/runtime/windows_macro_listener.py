@@ -45,6 +45,20 @@ class WindowsMacroListener:
                 self.running = False
                 return
             
+            print(
+                f"Opening Logitech HID device: {path}"
+            )
+            
+            self.device = hid.device()
+            self.device.set_nonblocking(True)
+            
+            print("HID device opened.")
+            
+            self.hidpp = HidppDevice(
+                self.device
+            )
+            
+            
 
     def stop(self):
         if not self.running:
