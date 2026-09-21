@@ -62,6 +62,8 @@ class WindowsMacroListener:
                 self.hidpp
             )
             
+            print("Enabling G-key diversion...")
+            
             
 
     def stop(self):
