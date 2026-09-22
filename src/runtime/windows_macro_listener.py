@@ -11,8 +11,13 @@ class WindowsMacroListener:
 
     def __init__(self):
         self.callback = None
+        
         self.running = False
-        self.hook = None
+        self.thread = None
+        
+        self.device = None
+        self.hidpp = None
+        self.gkeys = None
 
     def set_callback(self, callback):
         self.callback = callback
@@ -58,11 +63,13 @@ class WindowsMacroListener:
                 self.device
             )
             
-            self.g_keys = LogitechGKeys(
+            self.gkeys = LogitechGKeys(
                 self.hidpp
             )
             
             print("Enabling G-key diversion...")
+            
+            self.gkeys.enable_diversion()
             
             
 
