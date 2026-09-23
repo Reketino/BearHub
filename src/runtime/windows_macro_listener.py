@@ -71,6 +71,9 @@ class WindowsMacroListener:
             
             self.gkeys.enable_diversion()
             
+            print("G-key diversion enabled.")
+            
+            
             
 
     def stop(self):
