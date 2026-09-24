@@ -73,6 +73,14 @@ class WindowsMacroListener:
             
             print("G-key diversion enabled.")
             
+            while self.running:
+                
+                report = self.device.read(64)
+                
+                if not report:
+                    time.sleep(0.005)
+                    continue
+            
             
             
 
