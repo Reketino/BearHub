@@ -80,6 +80,8 @@ class WindowsMacroListener:
                 if not report:
                     time.sleep(0.005)
                     continue
+                
+                print(f"Report: {report}")
             
             
             
