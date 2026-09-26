@@ -82,6 +82,10 @@ class WindowsMacroListener:
                     continue
                 
                 print(f"Report: {report}")
+                
+                key_code = self.gkeys.handle_notification(
+                    report
+                )
             
             
             
