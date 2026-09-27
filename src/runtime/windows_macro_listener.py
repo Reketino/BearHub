@@ -86,6 +86,9 @@ class WindowsMacroListener:
                 key_code = self.gkeys.handle_notification(
                     report
                 )
+                
+                if key_code is None:
+                    continue
             
             
             
