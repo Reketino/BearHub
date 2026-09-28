@@ -89,6 +89,10 @@ class WindowsMacroListener:
                 
                 if key_code is None:
                     continue
+                
+                print(
+                    f"G-key code: {key_code}"
+                )
             
             
             
