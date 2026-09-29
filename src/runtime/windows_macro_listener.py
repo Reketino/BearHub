@@ -93,6 +93,11 @@ class WindowsMacroListener:
                 print(
                     f"G-key code: {key_code}"
                 )
+                
+                if self.callback is not None:
+                    self.callback(
+                        key_code
+                    )
             
             
             
