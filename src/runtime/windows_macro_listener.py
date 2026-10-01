@@ -105,6 +105,9 @@ class WindowsMacroListener:
                 print(
                     f"Windows G-key listener error: {error}"
                 )
+                
+        finally:
+            self._close_device()
             
             
             
