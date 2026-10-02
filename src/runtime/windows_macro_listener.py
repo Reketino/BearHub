@@ -118,6 +118,8 @@ class WindowsMacroListener:
 
         self.running = False
         
+        if self.gkeys is not None:
+        
         self._close_device()
         
         print(
