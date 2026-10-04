@@ -109,9 +109,6 @@ class WindowsMacroListener:
         finally:
             self._close_device()
             
-            
-            
-
     def stop(self):
         if not self.running:
             return
@@ -119,12 +116,11 @@ class WindowsMacroListener:
         self.running = False
         
         if self.gkeys is not None:
-        
-        self._close_device()
-        
-        print(
-            "Windows G-key listener stopped."
-        )
+            
+        try:
+            print(
+                "Disabling G-key diversion..."
+            )
         
     def _close_device(self):
         if self.device is None:
