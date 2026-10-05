@@ -124,6 +124,15 @@ class WindowsMacroListener:
 
             self.gkeys.disable_diversion()
             
+            print(
+                "G-key diversion disabled."
+            )
+            
+        except Exception as error:
+            
+            print(
+                f"Failed to disable G-key diversion"
+            )
             
         
     def _close_device(self):
