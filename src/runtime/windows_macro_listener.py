@@ -131,7 +131,7 @@ class WindowsMacroListener:
         except Exception as error:
             
             print(
-                f"Failed to disable G-key diversion"
+                f"Failed to disable G-key diversion: {error}"
             )
             
         
