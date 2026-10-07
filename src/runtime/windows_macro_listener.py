@@ -117,24 +117,25 @@ class WindowsMacroListener:
         
         if self.gkeys is not None:
             
-        try:
-            print(
-                "Disabling G-key diversion..."
-            )
+            try:
+                print(
+                    "Disabling G-key diversion..."
+                )
 
-            self.gkeys.disable_diversion()
+                self.gkeys.disable_diversion()
             
-            print(
-                "G-key diversion disabled."
-            )
+                print(
+                    "G-key diversion disabled."
+                )
             
-        except Exception as error:
+            except Exception as error:
             
-            print(
-                f"Failed to disable G-key diversion: {error}"
-            )
-            
+                print(
+                    f"Failed to disable G-key diversion: {error}"
+                )
         
+        self._close_device()
+    
     def _close_device(self):
         if self.device is None:
             return
