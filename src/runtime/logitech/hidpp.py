@@ -67,7 +67,9 @@ class HidppDevice:
             function_id=function_id,
             data=data,
         )
-
+        
+        print (f"HID++ request: {request}")
+        
         written = self.device.write(request)
 
         if written <= 0:
