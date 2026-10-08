@@ -13,7 +13,7 @@ class LogitechGKeys:
     def __init__(
         self,
         hidpp: HidppDevice,
-        feature_index: int = GKEY_FEATURE_ID
+        feature_index: int = GKEY_FEATURE_INDEX
     ):
         self.hidpp = hidpp
         self.feature_index = feature_index

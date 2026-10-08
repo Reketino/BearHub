@@ -1,30 +1,14 @@
-from src.runtime.windows_macro_listener import WindowsMacroListener
+from runtime.windows_macro_listener import WindowsMacroListener
 
-
-def on_key_pressed(key):
+def callback(key):
     print(f"CALLBACK: {key}")
 
-
 listener = WindowsMacroListener()
-
-listener.set_callback(
-    on_key_pressed
-)
+listener.set_callback(callback)
 
 listener.start()
 
-print()
-print("Press G1-G9.")
-print("Press Ctrl+C to stop.")
-print()
-
 try:
-    while True:
-        pass
-
-except KeyboardInterrupt:
-    print()
-    print("Stopping...")
-
+    input("Press Enter to stop...\n")
 finally:
     listener.stop()

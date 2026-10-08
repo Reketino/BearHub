@@ -55,6 +55,7 @@ class WindowsMacroListener:
             )
             
             self.device = hid.device()
+            self.device.open_path(path)
             self.device.set_nonblocking(True)
             
             print("HID device opened.")
@@ -147,3 +148,5 @@ class WindowsMacroListener:
             pass
         
         self.device = None
+        self.hidpp = None
+        self.gkeys = None
