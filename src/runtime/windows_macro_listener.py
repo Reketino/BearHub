@@ -4,6 +4,7 @@ from threading import Thread
 import hid
 
 from runtime.hid_device import find_device
+from runtime.hid_parser import HID_G_KEY_MAP
 from runtime.logitech.hidpp import HidppDevice
 from runtime.logitech.g_keys import LogitechGKeys
 
