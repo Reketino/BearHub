@@ -92,6 +92,12 @@ class WindowsMacroListener:
                 if key_code is None:
                     continue
                 
+                g_key = HID_G_KEY_MAP.get(
+                    str(key_code)
+                )
+                
+                
+                
                 print(
                     f"G-key code: {key_code}"
                 )
