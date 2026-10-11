@@ -96,7 +96,11 @@ class WindowsMacroListener:
                     str(key_code)
                 )
                 
-                
+                if g_key is None:
+                    print(
+                        f"Unknown G-key code: {key_code}" 
+                    )
+                    continue
                 
                 print(
                     f"G-key code: {key_code}"
