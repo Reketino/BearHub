@@ -103,13 +103,11 @@ class WindowsMacroListener:
                     continue
                 
                 print(
-                    f"G-key code: {key_code}"
+                    f"G-key code: {key_code} -> {g_key}"
                 )
                 
                 if self.callback is not None:
-                    self.callback(
-                        key_code
-                    )
+                    self.callback(g_key)
                     
         except Exception as error:
             
