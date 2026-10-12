@@ -28,9 +28,7 @@ class MacroEngine:
     def load_profile(self, macros: list[Macro]):
         self.profile = macros
         
-        print(
-            f"Loaded {len(macros)} macros."
-        )
+        print(f"Loaded {len(macros)} macros.")
         
     def execute_macro(self, macro):
         self.executor.execute(macro)
@@ -39,13 +37,16 @@ class MacroEngine:
         print(f"Pressed {key}")
         
         input_id = G_KEY_TO_INPUT_ID.get(key)
-        if not input_id:
-            return
+        if input_id is None:
+            print(f"No input_id configured for {key}")
+            
         for macro in self.profile:
             if macro.input_id == input_id:
                 print(f"Executing {macro.name}")
                 self.execute_macro(macro)
                 return
+            
+        print(f"No macro assigned to {key} (input_id: {input_id}).")
         
     def start(self):
         if self.running:
