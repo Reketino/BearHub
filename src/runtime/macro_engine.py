@@ -39,7 +39,8 @@ class MacroEngine:
         input_id = G_KEY_TO_INPUT_ID.get(key)
         if input_id is None:
             print(f"No input_id configured for {key}")
-            
+            return
+                    
         for macro in self.profile:
             if macro.input_id == input_id:
                 print(f"Executing {macro.name}")
