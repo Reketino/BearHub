@@ -251,7 +251,8 @@ class MainWindow(QMainWindow):
                 )
             )
             
-        self.macro_controller.display_macros(macros)
+        self.macros = macros
+        
         
     #-------- RELOAD CURRENT PROFILE --------#
         
