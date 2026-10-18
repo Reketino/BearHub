@@ -73,9 +73,7 @@ class HidppDevice:
         written = self.device.write(request)
 
         if written <= 0:
-            raise HidppError(
-                "Failed to write HID++ request."
-            )
+            raise HidppError("Failed to write HID++ request.")
 
         deadline = time.monotonic() + timeout
 
@@ -101,9 +99,7 @@ class HidppDevice:
 
             return report
 
-        raise HidppTimeoutError(
-            "Timed out waiting for HID++ response."
-        )
+        raise HidppTimeoutError("Timed out waiting for HID++ response.")
 
     def get_feature(
         self,
