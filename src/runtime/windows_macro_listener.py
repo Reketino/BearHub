@@ -97,14 +97,10 @@ class WindowsMacroListener:
                 )
                 
                 if g_key is None:
-                    print(
-                        f"Unknown G-key code: {key_code}" 
-                    )
+                    print(f"Unknown G-key code: {key_code}")
                     continue
                 
-                print(
-                    f"G-key code: {key_code} -> {g_key}"
-                )
+                print(f"G-key code: {key_code} -> {g_key}")
                 
                 if self.callback is not None:
                     self.callback(g_key)
@@ -112,9 +108,7 @@ class WindowsMacroListener:
         except Exception as error:
             
             if self.running:
-                print(
-                    f"Windows G-key listener error: {error}"
-                )
+                print(f"Windows G-key listener error: {error}")
                 
         finally:
             self._close_device()
@@ -128,21 +122,15 @@ class WindowsMacroListener:
         if self.gkeys is not None:
             
             try:
-                print(
-                    "Disabling G-key diversion..."
-                )
+                print("Disabling G-key diversion...")
 
                 self.gkeys.disable_diversion()
             
-                print(
-                    "G-key diversion disabled."
-                )
+                print("G-key diversion disabled.")
             
             except Exception as error:
             
-                print(
-                    f"Failed to disable G-key diversion: {error}"
-                )
+                print(f"Failed to disable G-key diversion: {error}")
         
         self._close_device()
     
