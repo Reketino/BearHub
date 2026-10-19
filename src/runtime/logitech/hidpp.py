@@ -85,6 +85,8 @@ class HidppDevice:
                 time.sleep(0.005)
                 continue
 
+            print(f"HID+++ received: {report}")
+
             if len(report) < 4:
                 continue
 
