@@ -78,7 +78,6 @@ class HidppDevice:
         deadline = time.monotonic() + timeout
 
         while time.monotonic() < deadline:
-
             report = self.device.read(64)
 
             if not report:
@@ -88,6 +87,7 @@ class HidppDevice:
             print(f"HID+++ received: {report}")
 
             if len(report) < 4:
+                print("Ignoring short HID+++ report.")
                 continue
 
             if report[0] != HIDPP_LONG_REPORT_ID:
