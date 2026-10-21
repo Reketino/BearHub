@@ -220,8 +220,7 @@ class MainWindow(QMainWindow):
     def get_assets_path(self, filename: str) -> Path:
         project_root = Path(__file__).resolve().parent.parent.parent
         return project_root / "assets" / filename
-        
-                     
+                      
     #-------- LOAD PROFILE --------#
         
     def load_profile(self, profile):
