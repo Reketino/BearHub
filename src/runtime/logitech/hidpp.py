@@ -91,6 +91,7 @@ class HidppDevice:
                 continue
 
             if report[0] != HIDPP_LONG_REPORT_ID:
+                print("Ignoring report with unexpected report ID.")
                 continue
 
             if report[1] != self.device_id:
