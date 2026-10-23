@@ -95,6 +95,7 @@ class HidppDevice:
                 continue
 
             if report[1] != self.device_id:
+                print("Ignoring report with unexpected device ID.")
                 continue
 
             if report[2] != feature_index:
