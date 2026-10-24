@@ -99,6 +99,7 @@ class HidppDevice:
                 continue
 
             if report[2] != feature_index:
+                print("Ignoring report with unexpected feature index.")
                 continue
 
             return report
