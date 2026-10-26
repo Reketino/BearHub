@@ -107,7 +107,7 @@ class HidppDevice:
         raise HidppTimeoutError(
             f"Timed out waiting for HID++ response "
             f"(feature_index={feature_index:#04x}, "
-            f")"
+            f"function_id={function_id:#04x})."
             )
 
     def get_feature(
