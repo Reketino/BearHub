@@ -119,7 +119,11 @@ class WindowsMacroListener:
 
         self.running = False
         
-        if self.gkeys is not None:
+        if ( 
+            self.thread is not None
+            and self.thread.is_alive()
+            
+        ):
             
             try:
                 print("Disabling G-key diversion...")
