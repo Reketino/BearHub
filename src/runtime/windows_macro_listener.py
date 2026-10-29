@@ -125,16 +125,13 @@ class WindowsMacroListener:
             and self.thread is not __import__("threading").current_thread()
         ):
             self.thread.join(timeout=2.0)
-            
+        
+        if self.device is not None and self.gkeys is not None:
             try:
                 print("Disabling G-key diversion...")
-
                 self.gkeys.disable_diversion()
-            
                 print("G-key diversion disabled.")
-            
             except Exception as error:
-            
                 print(f"Failed to disable G-key diversion: {error}")
         
         self._close_device()
