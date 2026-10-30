@@ -1,5 +1,5 @@
 import time
-from threading import Thread
+from threading import Thread, current_thread
 
 import hid
 
