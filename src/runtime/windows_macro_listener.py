@@ -122,7 +122,7 @@ class WindowsMacroListener:
         if ( 
             self.thread is not None
             and self.thread.is_alive()
-            and self.thread is not __import__("threading").current_thread()
+            and self.thread is not current_thread()
         ):
             self.thread.join(timeout=2.0)
         
