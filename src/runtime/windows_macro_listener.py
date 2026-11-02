@@ -111,6 +111,9 @@ class WindowsMacroListener:
                 print(f"Windows G-key listener error: {error}")
                 
         finally:
+            if self.device is not None and self.gkeys is not None:
+                try:
+                    
             
     def stop(self):
         if not self.running:
