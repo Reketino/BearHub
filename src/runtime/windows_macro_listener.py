@@ -113,7 +113,9 @@ class WindowsMacroListener:
         finally:
             if self.device is not None and self.gkeys is not None:
                 try:
-                    
+                    print("Disabling G-key diversion...")
+                    self.gkeys.disable_diversion()
+                    print("G-key diversion disabled.")
             
     def stop(self):
         if not self.running:
