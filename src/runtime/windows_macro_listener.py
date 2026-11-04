@@ -116,6 +116,8 @@ class WindowsMacroListener:
                     print("Disabling G-key diversion...")
                     self.gkeys.disable_diversion()
                     print("G-key diversion disabled.")
+                except Exception as error:
+                    print(f"Failed to disable G-key diversion: {error}")
             
     def stop(self):
         if not self.running:
