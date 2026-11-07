@@ -118,6 +118,9 @@ class WindowsMacroListener:
                     print("G-key diversion disabled.")
                 except Exception as error:
                     print(f"Failed to disable G-key diversion: {error}")
+                    
+            self._close_device()
+            
             
     def stop(self):
         if not self.running:
@@ -132,7 +135,7 @@ class WindowsMacroListener:
         ):
             self.thread.join(timeout=2.0)
         
-        if self.device is not None and self.thread.is_alive():
+        if self.thread is not None and self.thread.is_alive():
                 print("Warning: G-key lisstener has not stopped yet.")
                 return
         
