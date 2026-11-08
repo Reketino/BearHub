@@ -38,6 +38,7 @@ class WindowsMacroListener:
 
         print("Windows G-key listener started.")
         print("Listening for G1-G9.")
+ 
         
     def listen(self):
         try:
