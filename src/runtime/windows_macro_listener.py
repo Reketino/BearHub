@@ -139,7 +139,7 @@ class WindowsMacroListener:
             self.thread.join(timeout=2.0)
         
         if self.thread is not None and self.thread.is_alive():
-                print("Warning: G-key lisstener has not stopped yet.")
+                print("Warning: G-key listener has not stopped yet")
                 return
         
         self.thread = None
