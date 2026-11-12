@@ -10,7 +10,6 @@ from runtime.logitech.g_keys import LogitechGKeys
 
 class WindowsMacroListener:
 
-
     def __init__(self):
         self.callback = None
         
