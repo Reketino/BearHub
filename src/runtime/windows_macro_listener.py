@@ -45,11 +45,7 @@ class WindowsMacroListener:
             path = find_device()
             
             if path is None:
-                print(
-                    "No Logitech G-key HID device found."
-                )
-                
-                self.running = False
+                print("No Logitech G-key HID device found.")
                 return
             
             print(
