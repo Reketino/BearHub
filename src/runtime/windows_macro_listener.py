@@ -48,9 +48,7 @@ class WindowsMacroListener:
                 print("No Logitech G-key HID device found.")
                 return
             
-            print(
-                f"Opening Logitech HID device: {path}"
-            )
+            print(f"Opening Logitech HID device: {path}")
             
             self.device = hid.device()
             self.device.open_path(path)
