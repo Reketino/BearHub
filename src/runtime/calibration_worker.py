@@ -16,9 +16,7 @@ class CalibrationWorker(QObject):
                 self.progress.emit
             )
             
-            calibrator.save(
-                "src/storage/hid_mapping.json"
-            )
+            calibrator.save("src/storage/hid_mapping.json")
             
             load_mapping()
             self.finished.emit()
