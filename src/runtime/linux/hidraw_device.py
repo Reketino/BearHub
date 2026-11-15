@@ -2,12 +2,19 @@
 import os
 from pathlib import Path
 
-LOGITECH_VENDOR_ID = "046D"
-LIGHTSPEED_RECEIVER_PID = "C547"
 
-G915_X_WPID = "40B5"
+LOGITECH_VENDOR_ID = 0x046D
+G915_X_WPID = 0x40B5
 
 HIDRAW_PATH = Path("/sys/class/hidraw")
+
+
+class HidrawDeviceNotFoundError(RuntimeError):
+    """Raised when the G915 X device cannot be found."""
+
+
+class HidrawDeviceAccessError(RuntimeError):
+    """Raised when the G915 X device cannot be opened."""
 
 
 class HidrawDevice:
@@ -48,9 +55,7 @@ def _get_device_info(hidraw_path: Path) -> dict | None:
 
         if uevent_path.exists():
             try:
-                content = uevent_path.read_text(
-                    encoding="utf-8"
-                )
+                content = uevent_path.read_text(encoding="utf-8")
             except OSError:
                 content = ""
 
@@ -75,7 +80,6 @@ def find_g915_x() -> str | None:
     """Find the G915 X Lightspeed keyboard HIDRAW node."""
 
     if not HIDRAW_PATH.exists():
-        print("HIDRAW sysfs directory not found.")
         return None
 
     for hidraw_path in sorted(HIDRAW_PATH.glob("hidraw*")):
@@ -89,26 +93,24 @@ def find_g915_x() -> str | None:
         if len(hid_id) != 3:
             continue
 
-        _, vendor_id, product_id = hid_id
-
-        if vendor_id.upper() != LOGITECH_VENDOR_ID:
+        try:
+            _, vendor_id, product_id = (
+                int(value, 16) for value in hid_id
+            )
+        except ValueError:
             continue
 
-        if product_id.upper() != LIGHTSPEED_RECEIVER_PID:
+        if vendor_id != LOGITECH_VENDOR_ID:
             continue
 
-        modalias = info.get("MODALIAS", "")
-
-        if G915_X_WPID not in modalias.upper():
+        if product_id != G915_X_WPID:
             continue
 
-        device_path = f"/dev/{hidraw_path.name}"
+        if info.get("HID_NAME") != "Logitech G915 X":
+            continue
 
-        print(f"Found Logitech G915 X: {device_path}")
+        return f"/dev/{hidraw_path.name}"
 
-        return device_path
-
-    print("Logitech G915 X HIDRAW device not found.")
     return None
 
 
@@ -118,8 +120,8 @@ def open_g915_x() -> HidrawDevice:
     device_path = find_g915_x()
 
     if device_path is None:
-        raise RuntimeError(
-            "Could not find Logitech G915 X HIDRAW device."
+        raise HidrawDeviceNotFoundError(
+            "Logitech G915 X HIDRAW device not found."
         )
 
     try:
@@ -128,11 +130,11 @@ def open_g915_x() -> HidrawDevice:
             os.O_RDONLY | os.O_NONBLOCK,
         )
     except OSError as error:
-        raise RuntimeError(
+        raise HidrawDeviceAccessError(
             f"Could not open {device_path}: {error}"
         ) from error
 
-    print(f"Opened G915 X HIDRAW device: {device_path}")
+    print(f"Opened Logitech G915 X: {device_path}")
 
     return HidrawDevice(
         path=device_path,
