@@ -29,8 +29,6 @@ class MacroController:
      #-------- DISPLAY MACROS --------#
       
     def display_macros(self, macros):
-        self.view.macros = macros
-        self.view.engine.load_profile(macros)
         self.view.macro_list.clear()
             
         for macro in macros:
