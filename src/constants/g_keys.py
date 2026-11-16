@@ -1,3 +1,5 @@
+from typing import Final
+
 G_KEY_MAP = {
     "399": "G1",
     "400": "G2",
@@ -10,7 +12,7 @@ G_KEY_MAP = {
     "407": "G9",
 }
 
-G_KEY_TO_INPUT_ID = {
-    value: key
-    for key, value in G_KEY_MAP.items()
+G_KEY_TO_INPUT_ID: Final[dict[str, str]] = {
+    g_key: input_id
+    for input_id, g_key in G_KEY_MAP.items()
 }
