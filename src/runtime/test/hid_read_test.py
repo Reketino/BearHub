@@ -61,9 +61,7 @@ def listen_device(index, device):
             time.sleep(0.01)
 
     except Exception as error:
-        print(
-            f"[DEVICE {index}] ERROR: {error}"
-        )
+        print(f"[DEVICE {index}] ERROR: {error}")
 
     finally:
         try:
