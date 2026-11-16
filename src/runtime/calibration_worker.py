@@ -12,9 +12,7 @@ class CalibrationWorker(QObject):
         try:
             calibrator = HIDCalibrator()
             
-            calibrator.calibrate(
-                self.progress.emit
-            )
+            calibrator.calibrate(self.progress.emit)
             
             calibrator.save("src/storage/hid_mapping.json")
             
