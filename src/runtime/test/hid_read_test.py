@@ -69,9 +69,7 @@ def listen_device(index, device):
         except Exception:
             pass
 
-        print(
-            f"[DEVICE {index}] Closed."
-        )
+        print(f"[DEVICE {index}] Closed.")
 
 
 threads = []
