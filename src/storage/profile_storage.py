@@ -1,6 +1,51 @@
+
 import json
 from datetime import datetime
 from pathlib import Path
+
+from constants.g_keys import G_KEY_MAP
+
+
+def _macro_to_dict(macro) -> dict:
+    """Convert a Macro object into the profile JSON format."""
+    input_id = macro.input_id or ""
+
+    return {
+        "name": macro.name,
+        "value": macro.value,
+        "macro_type": macro.macro_type,
+        "input_id": input_id,
+        "preset": macro.profile_name,
+        "device": macro.device_signature,
+        "trigger_type": macro.trigger_type or "g_key",
+        "trigger_value": (
+            macro.trigger_value
+            or G_KEY_MAP.get(input_id, "")
+        ),
+        "suppress_trigger": macro.suppress_trigger,
+    }
+
+
+def _read_profile_data(path: Path) -> dict:
+    """Read profile data or return an empty profile structure."""
+    if not path.exists():
+        return {"profiles": []}
+
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def _write_profile_data(path: Path, data: dict) -> None:
+    """Write profile data to disk."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("w", encoding="utf-8") as file:
+        json.dump(
+            data,
+            file,
+            indent=4,
+            ensure_ascii=False,
+        )
 
 
 def save_profile(macros, output_file):
@@ -9,87 +54,62 @@ def save_profile(macros, output_file):
         "name": "Imported from G hub",
         "imported_at": datetime.now().isoformat(),
         "macro_count": len(macros),
-        "macros": []
+        "macros": [
+            _macro_to_dict(macro)
+            for macro in macros
+        ],
     }
-    
-    for macro in macros:
-        profile["macros"].append({
-            "name": macro.name,
-            "value": macro.value,
-            "macro_type": macro.macro_type,
-            "input_id": macro.input_id,
-            "preset": macro.profile_name,
-            "device": macro.device_signature,
-        })
-        
+
     profile["macros"].sort(
-        key=lambda m: (
-            m["input_id"] == "",
-            m["input_id"]
+        key=lambda macro: (
+            macro["input_id"] == "",
+            macro["input_id"],
         )
     )
-    
+
     path = Path(output_file)
-    
-    if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        
-    else: 
-        data = {"profiles": []}
-        
+    data = _read_profile_data(path)
+
     existing_index = next(
         (
             index
-            for index, p in enumerate(data["profiles"])
-            if p.get("id") == "ghub-import"
+            for index, existing_profile in enumerate(data["profiles"])
+            if existing_profile.get("id") == "ghub-import"
         ),
         None,
     )
-    
+
     if existing_index is not None:
         data["profiles"][existing_index] = profile
     else:
         data["profiles"].append(profile)
-        
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(
-            data,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
- 
-        
+
+    _write_profile_data(path, data)
+
+
 def load_profiles(output_file):
     path = Path(output_file)
-    
+
     if not path.exists():
         return []
-    
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)["profiles"]
 
-    
+    data = _read_profile_data(path)
+    return data.get("profiles", [])
+
+
 def add_macro(macro, output_file):
     path = Path(output_file)
-    
-    if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            
-    else:
-        data = {"profiles": []}
-        
+    data = _read_profile_data(path)
+
     profile = next(
         (
-            profile 
+            profile
             for profile in data["profiles"]
             if profile.get("id") == "bearhub"
         ),
-        None,   
+        None,
     )
-    
+
     if profile is None:
         profile = {
             "id": "bearhub",
@@ -98,33 +118,15 @@ def add_macro(macro, output_file):
             "macro_count": 0,
             "macros": [],
         }
-        
+
         data["profiles"].append(profile)
-        
-    profile["macros"].append(
-        {
-            "name": macro.name,
-            "value": macro.value,
-            "macro_type": macro.macro_type,
-            "input_id": macro.input_id,
-            "preset": macro.profile_name,
-            "device": macro.device_signature
-        }
-    )
-    
-    profile["macro_count"] = len(
-        profile["macros"]
-    )
-    
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(
-            data,
-            f,
-            indent=4,
-            ensure_ascii=False,
-        )
-        
-        
+
+    profile["macros"].append(_macro_to_dict(macro))
+    profile["macro_count"] = len(profile["macros"])
+
+    _write_profile_data(path, data)
+
+
 def update_macro(
     profile_id,
     macro_index,
@@ -132,13 +134,12 @@ def update_macro(
     output_file,
 ):
     path = Path(output_file)
-    
+
     if not path.exists():
         return False
-    
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-        
+
+    data = _read_profile_data(path)
+
     profile = next(
         (
             profile
@@ -147,38 +148,19 @@ def update_macro(
         ),
         None,
     )
-    
+
     if profile is None:
         return False
-    
-    if (
-        macro_index < 0
-        or macro_index >= len(profile["macros"])
-    ):
+
+    if not 0 <= macro_index < len(profile["macros"]):
         return False
-    
-    profile["macros"][macro_index] = {
-        "name": macro.name,
-        "value": macro.value,
-        "macro_type": macro.macro_type,
-        "input_id": macro.input_id,
-        "preset": macro.profile_name,
-        "device": macro.device_signature,
-    }
-    
-    profile["macro_count"] = len(
-        profile["macros"]
-    )
-    
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(
-            data,
-            f,
-            indent=4,
-            ensure_ascii=False,
-        )
-        
+
+    profile["macros"][macro_index] = _macro_to_dict(macro)
+    profile["macro_count"] = len(profile["macros"])
+
+    _write_profile_data(path, data)
     return True
+
 
 def delete_macro(
     profile_id,
@@ -186,13 +168,12 @@ def delete_macro(
     output_file,
 ):
     path = Path(output_file)
-    
+
     if not path.exists():
         return False
-    
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-        
+
+    data = _read_profile_data(path)
+
     profile = next(
         (
             profile
@@ -201,30 +182,19 @@ def delete_macro(
         ),
         None,
     )
-    
+
     if profile is None:
         return False
-    
-    if (
-        macro_index < 0
-        or macro_index >= len(profile["macros"])
-    ):
+
+    if not 0 <= macro_index < len(profile["macros"]):
         return False
-    
+
     del profile["macros"][macro_index]
-    
-    profile["macro_count"] = len(
-        profile["macros"]
-    )
-    
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(
-            data,
-            f,
-            indent=4,
-            ensure_ascii=False,
-        )
+    profile["macro_count"] = len(profile["macros"])
+
+    _write_profile_data(path, data)
     return True
+
 
 def is_key_available(
     profile_id,
@@ -233,14 +203,13 @@ def is_key_available(
     ignore_index=None,
 ):
     path = Path(output_file)
-    
+
     if not path.exists():
         return True
-    
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-        
-    profile = next (
+
+    data = _read_profile_data(path)
+
+    profile = next(
         (
             profile
             for profile in data["profiles"]
@@ -248,17 +217,15 @@ def is_key_available(
         ),
         None,
     )
-    
+
     if profile is None:
         return True
-    
-    for index, macro in enumerate(
-        profile["macros"]
-    ):
+
+    for index, macro in enumerate(profile["macros"]):
         if index == ignore_index:
             continue
-        
-        if macro.get("input_id") == input_id:
+
+        if macro.get("input_id", "") == input_id:
             return False
-        
+
     return True

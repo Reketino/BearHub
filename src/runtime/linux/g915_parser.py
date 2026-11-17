@@ -2,20 +2,21 @@
 from dataclasses import dataclass
 
 
-REPORT_ID = 0x01
-REPORT_LENGTH = 17
+REPORT_ID = 0x11
+REPORT_LENGTH = 20
+G_KEY_BYTE_INDEX = 4
 
 
 G_KEY_MAPPING = {
-    "G1": (14, 0x10),
-    "G2": (14, 0x20),
-    "G3": (14, 0x40),
-    "G4": (14, 0x80),
-    "G5": (15, 0x01),
-    "G6": (15, 0x02),
-    "G7": (15, 0x04),
-    "G8": (15, 0x08),
-    "G9": (15, 0x10),
+    0x09: "G1",
+    0x06: "G2",
+    0x03: "G3",
+    0x02: "G4",
+    0x07: "G5",
+    0x04: "G6",
+    0x08: "G7",
+    0x05: "G8",
+    0x0A: "G9",
 }
 
 
@@ -31,7 +32,7 @@ class G915XParser:
     """Parse G-key events from Logitech G915 X HID reports."""
 
     def __init__(self):
-        self._previous_pressed: set[str] = set()
+        self._previous_pressed: str | None = None
 
     def parse_report(self, report: bytes) -> list[G915XEvent]:
         """Parse a HID report and return detected key state changes."""
@@ -42,48 +43,51 @@ class G915XParser:
         if report[0] != REPORT_ID:
             return []
 
-        current_pressed = self._get_pressed_keys(report)
+        key_code = report[G_KEY_BYTE_INDEX]
 
-        newly_pressed = current_pressed - self._previous_pressed
-        newly_released = self._previous_pressed - current_pressed
+        current_pressed = G_KEY_MAPPING.get(key_code)
+
+        if current_pressed == self._previous_pressed:
+            return []
 
         events = []
 
-        for key in G_KEY_MAPPING:
-            if key in newly_pressed:
-                events.append(G915XEvent(key, True))
+        if self._previous_pressed is not None:
+            events.append(
+                G915XEvent(
+                    key=self._previous_pressed,
+                    pressed=False,
+                )
+            )
 
-            if key in newly_released:
-                events.append(G915XEvent(key, False))
+        if current_pressed is not None:
+            events.append(
+                G915XEvent(
+                    key=current_pressed,
+                    pressed=True,
+                )
+            )
 
         self._previous_pressed = current_pressed
 
         return events
 
-    @staticmethod
-    def _get_pressed_keys(report: bytes) -> set[str]:
-        """Extract currently pressed G-keys from a HID report."""
-
-        return {
-            key
-            for key, (byte_index, mask) in G_KEY_MAPPING.items()
-            if report[byte_index] & mask
-        }
-
     def release_all(self) -> list[G915XEvent]:
-        """Generate release events for every currently held G-key."""
+        """Generate a release event for the currently held G-key."""
 
-        events = [
-            G915XEvent(key, False)
-            for key in G_KEY_MAPPING
-            if key in self._previous_pressed
-        ]
+        if self._previous_pressed is None:
+            return []
 
-        self._previous_pressed.clear()
+        event = G915XEvent(
+            key=self._previous_pressed,
+            pressed=False,
+        )
 
-        return events
+        self._previous_pressed = None
+
+        return [event]
 
     def reset(self) -> None:
         """Reset the parser without generating release events."""
 
-        self._previous_pressed.clear()
+        self._previous_pressed = None
