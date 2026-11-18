@@ -2,7 +2,6 @@ import hid
 import threading
 import time
 
-
 VENDOR_ID = 0x046D
 PRODUCT_ID = 0xC547
 
@@ -26,9 +25,7 @@ print(
     f"Found {len(devices)} G-key interfaces.\n"
 )
 
-
 running = True
-
 
 def listen_device(index, device):
     global running
