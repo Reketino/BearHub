@@ -3,8 +3,9 @@ import threading
 from collections.abc import Callable
 
 from Xlib import X, XK, display
+from Xlib.display import Display
+from Xlib.xobject.drawable import Window
 from Xlib.error import BadAccess
-from Xlib.ext import record
 
 
 KEYSYM_ALIASES = {
@@ -46,10 +47,10 @@ class KeyboardListener:
         self._callback = on_key_pressed
         self._triggers = triggers
 
-        self._display = None
-        self._root = None
-        self._thread = None
-
+        self._display: Display | None = None
+        self._root: Window | None = None
+        self._thread: threading.Thread | None = None
+        
         self._running = False
         self._stop_event = threading.Event()
 
