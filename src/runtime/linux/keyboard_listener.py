@@ -166,7 +166,7 @@ class KeyboardListener:
             try:
                 self._root.grab_key(
                     keycode,
-                    0,
+                    X.AnyModifier,
                     False,
                     X.GrabModeAsync,
                     X.GrabModeSync,
