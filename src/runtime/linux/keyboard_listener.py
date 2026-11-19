@@ -7,7 +7,6 @@ from Xlib.display import Display
 from Xlib.xobject.drawable import Window
 from Xlib.error import BadAccess
 
-
 KEYSYM_ALIASES = {
     "Return": "Return",
     "space": "space",
