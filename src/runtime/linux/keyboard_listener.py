@@ -130,6 +130,12 @@ class KeyboardListener:
             print("Keyboard listener stopped.")
 
     def _register_triggers(self) -> None:
+        if self._display is None or self._root is None:
+            raise RuntimeError(
+            "X11 display is not initialized."
+        )
+
+        
         for trigger_value, suppress in self._triggers.items():
             keysym_name = KEYSYM_ALIASES.get(
                 trigger_value,
