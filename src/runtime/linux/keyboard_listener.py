@@ -73,20 +73,23 @@ class KeyboardListener:
         self._running = True
         self._thread.start()
 
+
     def stop(self) -> None:
         if not self._running:
             return
 
         self._stop_event.set()
 
-        if self._display is not None:
-            self._display.close()
-
         if (
             self._thread is not None
             and self._thread.is_alive()
         ):
             self._thread.join(timeout=3)
+
+        if self._thread is not None and self._thread.is_alive():
+            raise TimeoutError(
+                "Keyboard listener did not stop in time."
+            )
 
         self._thread = None
         self._running = False
