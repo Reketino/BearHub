@@ -214,8 +214,6 @@ class KeyboardListener:
 
         trigger_value, suppress = trigger
 
-        print(f"Detected trigger: {trigger_value}")
-
         if suppress:
             self._allow_keyboard(X.AsyncKeyboard)
         else:
