@@ -3,9 +3,9 @@ import threading
 from collections.abc import Callable
 
 from Xlib import X, XK, display
+from Xlib.display import Display
+from Xlib.xobject.drawable import Window
 from Xlib.error import BadAccess
-from Xlib.ext import record
-
 
 KEYSYM_ALIASES = {
     "Return": "Return",
@@ -36,7 +36,6 @@ KEYSYM_ALIASES = {
     "grave": "grave",
 }
 
-
 class KeyboardListener:
     def __init__(
         self,
@@ -46,10 +45,10 @@ class KeyboardListener:
         self._callback = on_key_pressed
         self._triggers = triggers
 
-        self._display = None
-        self._root = None
-        self._thread = None
-
+        self._display: Display | None = None
+        self._root: Window | None = None
+        self._thread: threading.Thread | None = None
+        
         self._running = False
         self._stop_event = threading.Event()
 
@@ -78,14 +77,16 @@ class KeyboardListener:
 
         self._stop_event.set()
 
-        if self._display is not None:
-            self._display.close()
-
         if (
             self._thread is not None
             and self._thread.is_alive()
         ):
             self._thread.join(timeout=3)
+
+        if self._thread is not None and self._thread.is_alive():
+            raise TimeoutError(
+                "Keyboard listener did not stop in time."
+            )
 
         self._thread = None
         self._running = False
@@ -129,6 +130,12 @@ class KeyboardListener:
             print("Keyboard listener stopped.")
 
     def _register_triggers(self) -> None:
+        if self._display is None or self._root is None:
+            raise RuntimeError(
+            "X11 display is not initialized."
+        )
+
+        
         for trigger_value, suppress in self._triggers.items():
             keysym_name = KEYSYM_ALIASES.get(
                 trigger_value,
@@ -156,11 +163,22 @@ class KeyboardListener:
             try:
                 self._root.grab_key(
                     keycode,
-                    0,
+                    X.AnyModifier,
                     False,
                     X.GrabModeAsync,
                     X.GrabModeSync,
                 )
+                
+                print(
+                    f"Grab requested: "
+                    f"key={trigger_value}, "
+                    f"keysym={keysym}, "
+                    f"keycode={keycode}"
+                )
+
+                self._display.sync()
+
+                print(f"Grab registered: {trigger_value}")
 
                 self._keycodes[keycode] = (
                     trigger_value,
@@ -176,6 +194,12 @@ class KeyboardListener:
         self._display.sync()
 
     def _handle_event(self, event) -> None:
+        print(
+            f"X11 event received: "
+            f"type={event.type}, "
+            f"detail={event.detail}"
+        )
+
         if event.type != X.KeyPress:
             return
 
@@ -188,15 +212,18 @@ class KeyboardListener:
         trigger_value, suppress = trigger
 
         if suppress:
-            # Consume the original key press.
             self._allow_keyboard(X.AsyncKeyboard)
         else:
-            # Replay the original key press to other applications.
             self._allow_keyboard(X.ReplayKeyboard)
 
         self._callback(trigger_value)
 
     def _allow_keyboard(self, mode: int) -> None:
+        if self._display is None:
+            raise RuntimeError(
+                "X11 display is not initialized."
+            )
+
         self._display.allow_events(
             mode,
             X.CurrentTime,
