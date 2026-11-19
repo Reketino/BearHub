@@ -197,6 +197,12 @@ class KeyboardListener:
         self._display.sync()
 
     def _handle_event(self, event) -> None:
+        print(
+            f"X11 event received: "
+            f"type={event.type}, "
+            f"detail={event.detail}"
+        )
+
         if event.type != X.KeyPress:
             return
 
@@ -208,11 +214,11 @@ class KeyboardListener:
 
         trigger_value, suppress = trigger
 
+        print(f"Detected trigger: {trigger_value}")
+
         if suppress:
-            # Consume the original key press.
             self._allow_keyboard(X.AsyncKeyboard)
         else:
-            # Replay the original key press to other applications.
             self._allow_keyboard(X.ReplayKeyboard)
 
         self._callback(trigger_value)
