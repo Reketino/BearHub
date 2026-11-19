@@ -171,6 +171,17 @@ class KeyboardListener:
                     X.GrabModeAsync,
                     X.GrabModeSync,
                 )
+                
+                print(
+                    f"Grab requested: "
+                    f"key={trigger_value}, "
+                    f"keysym={keysym}, "
+                    f"keycode={keycode}"
+                )
+
+                self._display.sync()
+
+                print(f"Grab registered: {trigger_value}")
 
                 self._keycodes[keycode] = (
                     trigger_value,
