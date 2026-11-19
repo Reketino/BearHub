@@ -73,7 +73,6 @@ class KeyboardListener:
         self._running = True
         self._thread.start()
 
-
     def stop(self) -> None:
         if not self._running:
             return
