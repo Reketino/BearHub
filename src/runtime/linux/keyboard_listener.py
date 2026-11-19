@@ -203,7 +203,13 @@ class KeyboardListener:
 
         self._callback(trigger_value)
 
+
     def _allow_keyboard(self, mode: int) -> None:
+        if self._display is None:
+            raise RuntimeError(
+                "X11 display is not initialized."
+            )
+
         self._display.allow_events(
             mode,
             X.CurrentTime,
