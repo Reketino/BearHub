@@ -37,7 +37,6 @@ KEYSYM_ALIASES = {
     "grave": "grave",
 }
 
-
 class KeyboardListener:
     def __init__(
         self,
