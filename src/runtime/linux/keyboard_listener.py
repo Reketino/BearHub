@@ -221,7 +221,6 @@ class KeyboardListener:
 
         self._callback(trigger_value)
 
-
     def _allow_keyboard(self, mode: int) -> None:
         if self._display is None:
             raise RuntimeError(
