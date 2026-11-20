@@ -23,9 +23,7 @@ def listen(path, index):
             if not report:
                 continue
 
-            print(
-                f"[DEVICE {index}] {report}"
-            )
+            print(f"[DEVICE {index}] {report}")
 
     except Exception as error:
         print(
