@@ -8,6 +8,10 @@ ENV FONTCONFIG_CACHE_DIR=/tmp/.cache/fontconfig
 
 WORKDIR /app
 
+# Create writable Fontconfig cache directory
+RUN mkdir -p /tmp/.cache/fontconfig \
+    && chmod -R 777 /tmp/.cache
+
 # System dependencies for PySide6, X11 and evdev
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
