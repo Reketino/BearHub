@@ -21,9 +21,7 @@ for device in hid.enumerate():
         devices.append(device)
 
 
-print(
-    f"Found {len(devices)} G-key interfaces.\n"
-)
+print(f"Found {len(devices)} G-key interfaces.\n")
 
 running = True
 
