@@ -1,0 +1,28 @@
+
+services:
+  bearhub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: bearhub
+
+    user: "1000:1000"
+
+    environment:
+      DISPLAY: ${DISPLAY}
+      XAUTHORITY: /tmp/.Xauthority
+      QT_X11_NO_MITSHM: "1"
+      QT_QPA_PLATFORM: xcb
+
+    volumes:
+      # X11 socket – gir containeren tilgang til det grafiske skrivebordet
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+      # X11 authentication
+      - ${XAUTHORITY:-/home/bear/.Xauthority}:/tmp/.Xauthority:ro
+
+      # Persistent storage for BearHub profiles
+      - ./src/storage:/app/src/storage
+
+    init: true
