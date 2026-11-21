@@ -26,9 +26,7 @@ def listen(path, index):
             print(f"[DEVICE {index}] {report}")
 
     except Exception as error:
-        print(
-            f"[DEVICE {index}] ERROR: {error}"
-        )
+        print(f"[DEVICE {index}] ERROR: {error}")
 
     finally:
         try:
