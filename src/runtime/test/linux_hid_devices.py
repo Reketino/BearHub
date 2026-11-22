@@ -34,9 +34,7 @@ def listen(path, index):
         except Exception:
             pass
 
-        print(
-            f"[DEVICE {index}] Closed."
-        )
+        print(f"[DEVICE {index}] Closed.")
 
 
 threads = []
