@@ -49,7 +49,6 @@ for index, path in enumerate(PATHS):
     threads.append(thread)
     thread.start()
 
-
 print()
 print("Both Logitech interfaces are listening.")
 print("Press G1-G9.")
