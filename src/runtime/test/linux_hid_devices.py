@@ -3,7 +3,6 @@ from threading import Thread
 
 PATHS = [ b"1-4:1.2", b"1-9.1:1.2"]
 
-
 def listen(path, index):
     device = hid.device()
 
