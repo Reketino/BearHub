@@ -31,7 +31,6 @@ def listen(path, index):
 
         print(f"[DEVICE {index}] Closed.")
 
-
 threads = []
 
 for index, path in enumerate(PATHS):
